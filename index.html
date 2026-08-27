@@ -1,0 +1,2821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mentor Pro AI | Affiliate Sales Master</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <style>
+        :root { 
+            --bg-main: #212121; 
+            --bg-sidebar: #171717; 
+            --bg-input: #2f2f2f;
+            --text-primary: #ececf1; 
+            --text-muted: #9b9b9b;
+            --border: #424242; 
+            --accent: #10a37f; 
+            --accent-hover: #1a7f64;
+            --danger: #ef4444; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #050505; color: var(--text-primary); overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+
+        .bg-orbs { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden; pointer-events: none; background: #0b0c10; }
+        .bg-orbs::before, .bg-orbs::after { content: ''; position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.6; animation: float 12s infinite alternate ease-in-out; }
+        .bg-orbs::before { width: 500px; height: 500px; background: #6366f1; top: -150px; left: -150px; }
+        .bg-orbs::after { width: 600px; height: 600px; background: #ec4899; bottom: -200px; right: -150px; animation-delay: -6s; }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 80px) scale(1.1); } }
+
+        .premium-btn { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); color: white; font-size: 18px; font-weight: 600; padding: 18px 40px; border-radius: 30px; border: none; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4); display: inline-flex; align-items: center; justify-content: center; width: 100%; max-width: 320px; gap: 10px; }
+        .premium-btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 35px rgba(168, 85, 247, 0.5); }
+
+        .auth-card { background: rgba(20, 20, 30, 0.4); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 50px 40px; max-width: 450px; margin: 60px auto; box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1); text-align: center; }
+        .auth-card h2 { font-size: 32px; font-weight: 800; margin-bottom: 10px; color: #fff; }
+        .auth-card p.subtitle { color: #94a3b8; font-size: 15px; margin-bottom: 35px; }
+        .auth-group { margin-bottom: 22px; text-align: left; }
+        .auth-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #cbd5e1; }
+        .auth-group input { width: 100%; padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: white; outline: none; font-size: 16px; transition: 0.3s; }
+        .auth-group input:focus { border-color: #818cf8; box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2); }
+
+        .page { display: none; width: 100%; min-height: 100vh; animation: fadeIn 0.4s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        #dashboardPage.active { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; z-index: 9999; display: flex; background: var(--bg-main); }
+
+        .sidebar { width: 260px; background: var(--bg-sidebar); display: flex; flex-direction: column; padding: 10px; flex-shrink: 0; transition: transform 0.3s ease; z-index: 10001; overflow: hidden; }
+        .sidebar-top { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; min-height: 0; }
+        .new-chat-btn { background: transparent; border: 1px solid var(--border); color: var(--text-primary); padding: 11px 14px; border-radius: 8px; text-align: left; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.2s; margin-bottom: 8px; }
+        .new-chat-btn:hover { background: #2a2a2a; }
+        .chat-history-section { font-size: 11px; font-weight: 600; color: var(--text-muted); padding: 8px 10px 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .chat-history-item { padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--text-muted); transition: 0.2s; display: flex; align-items: center; gap: 8px; position: relative; }
+        .chat-history-item:hover { background: #2a2a2a; color: var(--text-primary); }
+        .chat-history-item.active-chat { background: #2a2a2a; color: var(--text-primary); }
+        .chat-history-item .chat-title-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .chat-history-item .del-chat-btn { opacity: 0; font-size: 11px; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 2px 5px; border-radius: 4px; transition: 0.2s; }
+        .chat-history-item:hover .del-chat-btn { opacity: 1; }
+        .chat-history-item .del-chat-btn:hover { color: var(--danger); background: rgba(239,68,68,0.1); }
+
+        .main-chat-area { flex: 1; display: flex; flex-direction: column; position: relative; background: var(--bg-main); height: 100vh; height: 100dvh; overflow: hidden; min-width: 0; }
+        .mobile-header { display: none; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid var(--border); color: var(--text-primary); font-size: 16px; font-weight: 500; }
+        .mobile-header button { background: none; border: none; color: var(--text-primary); font-size: 20px; cursor: pointer; }
+        .mobile-header-right { display: flex; align-items: center; gap: 15px; }
+
+        /* Memory Button */
+        .memory-btn { background: none; border: none; color: var(--text-muted); font-size: 17px; cursor: pointer; padding: 6px; position: relative; transition: 0.2s; border-radius: 6px; }
+        .memory-btn:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
+        .memory-btn.has-data { color: #a78bfa; }
+        .memory-btn.has-data::after { content: ''; position: absolute; top: 3px; right: 3px; width: 7px; height: 7px; background: #a78bfa; border-radius: 50%; border: 1.5px solid var(--bg-main); }
+        @keyframes memPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(167,139,250,0.4); } 50% { box-shadow: 0 0 0 5px rgba(167,139,250,0); } }
+        .memory-btn.has-data { animation: memPulse 2.5s infinite; }
+
+        /* Funnel Progress Bar UI */
+        .funnel-container { width: 100%; background: #111; padding: 12px 20px; display: none; border-bottom: 1px solid var(--border); justify-content: space-between; align-items: center; font-size: 12px; }
+        .funnel-container.active { display: flex; }
+        .funnel-step { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #555; position: relative; flex: 1; }
+        .funnel-step::after { content: ''; position: absolute; top: 12px; left: 50%; width: 100%; height: 2px; background: #333; z-index: 1; }
+        .funnel-step:last-child::after { display: none; }
+        .funnel-icon { width: 24px; height: 24px; border-radius: 50%; background: #222; display: flex; align-items: center; justify-content: center; z-index: 2; border: 2px solid #333; transition: 0.3s; }
+        .funnel-step.active .funnel-icon { background: var(--accent); border-color: #fff; color: white; box-shadow: 0 0 10px var(--accent); }
+        .funnel-step.active { color: white; font-weight: 600; }
+        .funnel-step.dead .funnel-icon { background: var(--danger); border-color: #fff; color: white; box-shadow: 0 0 10px var(--danger); }
+        .funnel-step.dead { color: var(--danger); font-weight: 600; }
+
+        /* Follow Up Alert Banner */
+        .followup-banner { background: linear-gradient(to right, #ef4444, #b91c1c); color: white; text-align: center; padding: 10px; font-size: 13px; font-weight: 600; display: none; cursor: pointer; }
+        .followup-banner.active { display: block; animation: fadeIn 0.3s ease; }
+
+        /* Memory Overlay */
+        .memory-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 50000; display: none; align-items: flex-start; justify-content: flex-end; padding: 58px 8px 0; }
+        .memory-overlay.active { display: flex; }
+        .memory-panel { background: #1a1a2e; border: 1px solid rgba(167,139,250,0.2); border-radius: 16px; width: 295px; max-height: 82vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.7); animation: memSlideIn 0.25s ease; flex-shrink: 0; }
+        @keyframes memSlideIn { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+        .memory-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 18px; border-bottom: 1px solid rgba(255,255,255,0.07); position: sticky; top: 0; background: #1a1a2e; z-index: 1; }
+        .memory-header span { font-size: 13px; font-weight: 700; color: #a78bfa; display: flex; align-items: center; gap: 8px; }
+        .memory-header button { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 15px; padding: 3px; border-radius: 4px; transition: 0.2s; }
+        .memory-header button:hover { color: white; }
+        .memory-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 13px; }
+        .mem-field label { display: block; font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.7px; }
+        .mem-field input, .mem-field select, .mem-field textarea { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: white; padding: 9px 11px; font-size: 13px; outline: none; resize: vertical; font-family: 'Inter', sans-serif; transition: border 0.2s; }
+        .mem-field input:focus, .mem-field select:focus, .mem-field textarea:focus { border-color: #a78bfa; background: rgba(167,139,250,0.05); }
+        .mem-field select { cursor: pointer; }
+        .mem-field select option { background: #1a1a2e; color: white; }
+        .mem-save-btn { background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; padding: 11px; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; transition: 0.2s; }
+        .mem-save-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .mem-note { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 4px; }
+
+        @media (max-width: 768px) {
+            .sidebar { position: absolute; height: 100vh; height: 100dvh; transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .mobile-header { display: flex; }
+            .chat-input-box { border-radius: 16px; }
+        }
+
+        .chat-container { flex: 1; overflow-y: auto; padding-bottom: 20px; scroll-behavior: smooth; }
+        .message-row { display: flex; justify-content: center; width: 100%; padding: 20px 20px; }
+        .message-content { width: 100%; max-width: 750px; display: flex; gap: 16px; flex-direction: column; }
+        .message-content-inner { display: flex; gap: 16px; width: 100%; }
+        .message-row.user { justify-content: center; }
+        .message-row.user .message-content-inner { justify-content: flex-end; }
+        .message-row.user .msg-text { background: var(--bg-input); padding: 12px 18px; border-radius: 20px; border-bottom-right-radius: 5px; font-size: 15px; max-width: 85%; line-height: 1.5; color: var(--text-primary); }
+        .message-row.user .avatar { display: none; }
+        .message-row.ai .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; color: white; margin-top: 2px; }
+        .message-row.ai .msg-text { flex: 1; font-size: 15px; line-height: 1.75; color: var(--text-primary); }
+        .message-row.ai .msg-text p { margin-bottom: 10px; }
+        .message-row.ai pre { background: #1a1a1a; padding: 15px; border-radius: 8px; overflow-x: auto; font-family: monospace; margin-bottom: 10px; }
+
+        /* Pure Script Box UI */
+        .script-box { background: rgba(16, 163, 127, 0.05); border: 1px solid rgba(16, 163, 127, 0.3); border-radius: 12px; padding: 15px; margin: 15px 0; position: relative; }
+        .script-title { font-size: 12px; text-transform: uppercase; color: #10a37f; font-weight: 700; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .script-content { font-size: 15px; color: #fff; margin-bottom: 15px; white-space: pre-wrap; line-height: 1.6; }
+        .script-actions { display: flex; gap: 10px; }
+        .script-btn { flex: 1; padding: 10px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 13px; display: flex; justify-content: center; align-items: center; gap: 6px; transition: 0.2s; }
+        .script-btn.copy { background: #333; color: white; }
+        .script-btn.copy:hover { background: #444; }
+        .script-btn.wa { background: #25D366; color: white; }
+        .script-btn.wa:hover { background: #1ebc5a; }
+        .script-btn.voice-opt { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.3); flex: 0.7; }
+        .script-btn.voice-opt:hover { background: rgba(167,139,250,0.22); }
+        .script-btn.voice-opt:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Mentor Tip Box */
+        .mentor-tip-box { background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; padding: 14px 16px; margin: 12px 0; }
+        .mentor-tip-title { font-size: 11px; text-transform: uppercase; color: #f59e0b; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.6px; display: flex; align-items: center; gap: 6px; }
+        .mentor-tip-line { font-size: 13.5px; color: #e2e8f0; margin-bottom: 7px; line-height: 1.55; padding-left: 4px; }
+        .mentor-tip-line:last-child { margin-bottom: 0; }
+        .closing-badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-left: 5px; }
+        .closing-badge.low { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .closing-badge.medium { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .closing-badge.high { background: rgba(16,163,127,0.15); color: #10a37f; }
+        .closing-badge.very-high { background: rgba(99,102,241,0.2); color: #818cf8; animation: glowPulse 2s infinite; }
+        @keyframes glowPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(99,102,241,0.4); } 50% { box-shadow: 0 0 8px 2px rgba(99,102,241,0.2); } }
+        .mistake-warning-box { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 13px; color: #fca5a5; line-height: 1.5; }
+        .mistake-warning-box .mw-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #ef4444; margin-bottom: 5px; letter-spacing: 0.5px; }
+
+        .welcome-screen { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; }
+        .welcome-screen h2 { font-size: 28px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+        .welcome-screen p { color: var(--text-muted); font-size: 15px; max-width: 400px; margin-bottom: 30px; }
+        .welcome-icon { font-size: 48px; margin-bottom: 20px; background: linear-gradient(135deg, #10a37f, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .welcome-tips { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 380px; }
+        .welcome-tip { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 11px 15px; text-align: left; font-size: 13px; color: var(--text-muted); display: flex; align-items: flex-start; gap: 10px; }
+        .welcome-tip i { color: #818cf8; margin-top: 2px; flex-shrink: 0; }
+
+        /* Quick Action Chips */
+        .quick-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; max-width: 500px; }
+        .quick-chip { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 8px 14px; font-size: 13px; color: #c4c4d4; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+        .quick-chip:hover { background: rgba(99,102,241,0.15); border-color: rgba(99,102,241,0.4); color: #a78bfa; }
+        .quick-chip i { margin-right: 5px; font-size: 11px; }
+
+        .input-area { width: 100%; background: var(--bg-main); padding: 12px 16px; padding-bottom: max(12px, env(safe-area-inset-bottom)); display: flex; justify-content: center; border-top: 1px solid var(--border); flex-shrink: 0; }
+        .chat-input-box { width: 100%; max-width: 750px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 24px; padding: 8px 15px; display: flex; align-items: center; gap: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.2); }
+        
+        /* Mic Button UI */
+        .mic-btn { background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; transition: 0.2s; padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink:0; }
+        .mic-btn:hover { color: white; background: rgba(255,255,255,0.05); }
+        .mic-btn.recording { color: #ef4444; animation: pulseRed 1.5s infinite; }
+        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+        .chat-input-box input { flex: 1; background: transparent; border: none; color: white; padding: 8px; font-size: 15px; outline: none; }
+        .send-btn { background: var(--text-primary); color: var(--bg-main); border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; transition: 0.2s; flex-shrink: 0; }
+        .send-btn:hover { opacity: 0.8; }
+        .send-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        .action-bar { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; margin-left: 44px; }
+        .action-btn { background: var(--bg-input); border: 1px solid var(--border); color: var(--text-primary); padding: 7px 13px; border-radius: 6px; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; transition: 0.2s; }
+        .action-btn:hover { background: #3a3a3a; }
+        .hindi-trans-block { margin-top: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.2); margin-left: 44px; }
+
+        .settings-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-main); z-index: 20000; display: none; flex-direction: column; }
+        .settings-overlay.active { display: flex; }
+        .settings-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--border); }
+        .settings-header .back-btn { background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; display: none; }
+        .settings-header h3 { font-size: 16px; font-weight: 600; flex: 1; text-align: center; }
+        .settings-header .close-btn { background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
+        .settings-body { flex: 1; overflow: hidden; position: relative; }
+        .settings-menu { padding: 10px; overflow-y: auto; height: 100%; }
+        .set-menu-item { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--border); cursor: pointer; font-size: 15px; transition: 0.2s; }
+        .set-menu-item:hover { background: var(--bg-input); }
+        .set-menu-item .left { display: flex; align-items: center; gap: 15px; color: var(--text-primary); }
+        .settings-subpage { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); overflow-y: auto; padding: 20px; }
+        .settings-subpage.active { display: block; animation: slideIn 0.3s ease; }
+        #stHome, #stQuestionView, #stResultView { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; box-sizing: border-box; }
+        @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: var(--text-muted); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-input); color: white; outline: none; font-size: 16px; transition: border 0.2s; }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
+        .save-btn { background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 500; width: 100%; margin-top: 10px; }
+        .add-key-wrapper { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; flex-direction: column; z-index: 30000; }
+        .loader-overlay.active { display: flex; }
+        .typing-dot { display: inline-block; width: 8px; height: 8px; background: var(--text-muted); border-radius: 50%; margin: 0 2px; animation: typingPulse 1.2s infinite; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingPulse { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1); } }
+        .sidebar-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; }
+        .sidebar-backdrop.active { display: block; }
+
+        /* Toast */
+        .toast-msg { position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%) translateY(15px); background: #0d1f0d; border: 1px solid #10b981; color: #6ee7b7; padding: 9px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; z-index: 99999; opacity: 0; pointer-events: none; transition: all 0.3s ease; white-space: nowrap; }
+        .toast-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* ===== NOVA WAKE WORD ===== */
+        #novaToggleBtn { background: rgba(99,102,241,0.15); border: 1.5px solid rgba(99,102,241,0.35); color: #a5b4fc; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.25s; white-space: nowrap; }
+        #novaToggleBtn.active { background: rgba(99,102,241,0.3); border-color: #6366f1; color: #c7d2fe; box-shadow: 0 0 12px rgba(99,102,241,0.4); }
+        #novaToggleBtn.awake  { background: rgba(16,163,127,0.25); border-color: #10a37f; color: #6ee7b7; box-shadow: 0 0 12px rgba(16,163,127,0.4); }
+        #novaDot { width: 7px; height: 7px; border-radius: 50%; background: #555; transition: background 0.3s; flex-shrink: 0; }
+        #novaToggleBtn.active #novaDot { background: #6366f1; animation: novaPulse 1.8s infinite; }
+        #novaToggleBtn.awake  #novaDot { background: #10a37f; animation: novaPulse 0.5s infinite; }
+        @keyframes novaPulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+        #novaAwakeOverlay { display:none; position:fixed; inset:0; z-index:99000; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; flex-direction:column; gap:20px; }
+        #novaAwakeOverlay.show { display:flex; animation:fadeIn 0.2s ease; }
+        .nova-pulse-ring { width:130px; height:130px; border-radius:50%; background:rgba(99,102,241,0.15); border:3px solid #6366f1; display:flex; align-items:center; justify-content:center; animation:novaRing 1s infinite; }
+        .nova-pulse-ring i { font-size:48px; color:#818cf8; }
+        @keyframes novaRing { 0%,100%{box-shadow:0 0 0 0 rgba(99,102,241,0.5)}50%{box-shadow:0 0 0 25px rgba(99,102,241,0)} }
+        .nova-label { color:#c7d2fe; font-size:22px; font-weight:700; }
+        .nova-sub   { color:#818cf8; font-size:14px; }
+        .nova-cancel { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#aaa; padding:10px 24px; border-radius:20px; cursor:pointer; font-size:14px; margin-top:10px; }
+
+        /* ===== SELF-TEST (Mock Exam) ===== */
+        .st-card { background: var(--bg-input); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 14px; }
+        .st-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .st-sub { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px; }
+        .st-progress-label { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+        .st-progress-bar { height: 8px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 18px; }
+        .st-progress-fill { height: 100%; background: linear-gradient(90deg, #10a37f, #818cf8); border-radius: 20px; transition: width 0.3s ease; }
+        .st-question-card { background: var(--bg-input); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+        .st-qtext { font-size: 15px; font-weight: 600; line-height: 1.6; margin-bottom: 12px; white-space: pre-wrap; }
+        .st-chunk-ref { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+        .st-answer { width: 100%; min-height: 130px; background: #1a1a1a; border: 1px solid var(--border); border-radius: 10px; color: white; padding: 12px; font-size: 14px; font-family: 'Inter', sans-serif; outline: none; resize: vertical; line-height: 1.5; }
+        .st-answer:focus { border-color: var(--accent); }
+        .st-primary-btn { width: 100%; padding: 14px; border: none; border-radius: 10px; background: linear-gradient(135deg, #10a37f, #0e8a6d); color: white; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .st-primary-btn:hover { opacity: 0.9; }
+        .st-primary-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .st-ghost-btn { width: 100%; padding: 13px; border: 1px solid var(--border); border-radius: 10px; background: transparent; color: var(--text-primary); font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; margin-bottom: 10px; }
+        .st-ghost-btn:hover { background: var(--bg-input); }
+        .st-score-big { font-size: 48px; font-weight: 800; text-align: center; margin: 10px 0 4px; }
+        .st-score-sub { text-align: center; font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
+        .st-breakdown-item { background: #1a1a1a; border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; cursor: pointer; }
+        .st-breakdown-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
+        .st-breakdown-body { display: none; margin-top: 10px; font-size: 13px; color: var(--text-muted); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 10px; }
+        .st-breakdown-item.open .st-breakdown-body { display: block; }
+        .st-chip { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin: 4px 6px 4px 0; }
+        .st-chip.weak { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+        .st-chip.ok { background: rgba(16,163,127,0.12); color: #6ee7b7; border: 1px solid rgba(16,163,127,0.3); }
+        .st-history-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 4px; border-bottom: 1px solid var(--border); font-size: 13px; cursor: pointer; }
+        .st-history-row:last-child { border-bottom: none; }
+        .st-history-row:hover { background: var(--bg-input); }
+        .st-verdict { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+        .st-verdict.correct { background: rgba(16,163,127,0.15); color: #6ee7b7; }
+        .st-verdict.partial { background: rgba(245,158,11,0.15); color: #fbbf24; }
+        .st-verdict.incorrect { background: rgba(239,68,68,0.15); color: #f87171; }
+        .st-disabled-box { background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.25); border-radius: 12px; padding: 16px; margin-bottom: 14px; font-size: 13px; color: #fbbf24; line-height: 1.6; }
+        .st-note { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+<div class="bg-orbs"></div>
+
+<div class="loader-overlay" id="loader">
+    <i class="fa-solid fa-circle-notch fa-spin fa-3x" style="color: #818cf8; margin-bottom: 15px;"></i>
+    <p style="color: white; font-weight: 500;">Securing connection...</p>
+</div>
+
+<!-- PHONE AUTH PAGE -->
+<div id="phoneAuthPage" class="page active">
+    <div class="auth-card" style="margin-top: 100px;">
+        <div style="font-size:40px;color:#818cf8;margin-bottom:15px;"><i class="fa-solid fa-robot"></i></div>
+        <h2>Welcome to Mentor Pro</h2>
+        <p class="subtitle">Enter your Mobile Number to access the AI</p>
+        <div class="auth-group">
+            <label>Mobile Number</label>
+            <input type="tel" id="mobileNumberInput" placeholder="Enter your 10 digit number" maxlength="10">
+        </div>
+        <button class="premium-btn" style="width:100%;max-width:100%;margin-top:10px;" onclick="loginWithPhone()">Access Dashboard <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboardPage" class="page">
+    <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeMobileSidebar()"></div>
+    <div class="sidebar" id="appSidebar">
+        <div class="sidebar-top" id="sidebarTopArea">
+            <button class="new-chat-btn" onclick="startNewChat()"><i class="fa-solid fa-plus"></i> New chat</button>
+            <div id="chatHistoryList"></div>
+        </div>
+    </div>
+
+    <div class="main-chat-area">
+        <!-- MOBILE HEADER -->
+        <div class="mobile-header">
+            <button onclick="toggleMobileSidebar()"><i class="fa-solid fa-bars"></i></button>
+            <span>Mentor Pro AI</span>
+            <div class="mobile-header-right">
+                <button id="novaToggleBtn" onclick="window.novaEngine&&window.novaEngine.toggle()">
+                    <div id="novaDot"></div>
+                    <span id="novaLabel">Nova</span>
+                </button>
+                <button class="memory-btn" id="memoryBtn" onclick="openMemoryPanel()" title="Lead Memory"><i class="fa-solid fa-brain"></i></button>
+                <button onclick="openSettingsPage()"><i class="fa-solid fa-gear"></i></button>
+            </div>
+        </div>
+
+        <!-- FUNNEL BAR -->
+        <div class="funnel-container" id="funnelBar">
+            <div class="funnel-step" id="fs-cold"><div class="funnel-icon">🧊</div>Cold</div>
+            <div class="funnel-step" id="fs-engaged"><div class="funnel-icon">👀</div>Engaged</div>
+            <div class="funnel-step" id="fs-objection"><div class="funnel-icon">🚧</div>Objection</div>
+            <div class="funnel-step" id="fs-hot"><div class="funnel-icon">🔥</div>Hot</div>
+            <div class="funnel-step" id="fs-closed"><div class="funnel-icon">💸</div>Closed</div>
+        </div>
+        
+        <!-- FOLLOW UP BANNER -->
+        <div class="followup-banner" id="followUpBanner" onclick="generateFollowUp()">
+            <i class="fa-solid fa-clock"></i> Boss! Is lead ka Follow-Up time aa gaya hai. Yahan click karein nayi script ke liye.
+        </div>
+
+        <div id="chatBox" class="chat-container">
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-icon"><i class="fa-solid fa-robot"></i></div>
+                <h2>Mentor Pro AI</h2>
+                <p>Apni lead ki situation describe karo — main psychology samajh ke best closing script dunga.</p>
+                <div class="welcome-tips">
+                    <div class="welcome-tip"><i class="fa-solid fa-microphone"></i><span>Type mat karo! Neeche mic button dabao aur bol ke batao lead ne kya bola.</span></div>
+                    <div class="welcome-tip"><i class="fa-solid fa-copy"></i><span>Main aapko humesha 2 Options dunga (Soft aur Aggressive). Jo best lage seedha WhatsApp pe share karo.</span></div>
+                    <div class="welcome-tip"><i class="fa-solid fa-chart-line"></i><span>Upar Funnel dekho, main khud track karunga lead "Cold" hai ya "Hot".</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <div class="chat-input-box">
+                <!-- MIC BUTTON -->
+                <button class="mic-btn" id="micBtn" onclick="toggleVoiceTyping()"><i class="fa-solid fa-microphone"></i></button>
+                <input type="text" id="aiInput" placeholder="Bolo ya type karo lead ne kya kaha..." onkeypress="if(event.key==='Enter' && !event.shiftKey) sendMsg()">
+                <button class="send-btn" id="sendBtn" onclick="sendMsg()"><i class="fa-solid fa-arrow-up"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SETTINGS OVERLAY -->
+<div class="settings-overlay" id="settingsOverlay">
+    <div class="settings-header">
+        <button class="back-btn" id="setBackBtn" onclick="backToSetMenu()"><i class="fa-solid fa-arrow-left"></i></button>
+        <h3 id="settingsTitle">Settings</h3>
+        <button class="close-btn" onclick="closeSettingsPage()"><i class="fa-solid fa-times"></i></button>
+    </div>
+    <div class="settings-body" id="settingsBodyArea">
+        <div class="settings-menu" id="setMenu">
+            <div class="set-menu-item" onclick="openSubPage('sub-rules','Personal Training')">
+                <div class="left"><i class="fa-solid fa-user-pen"></i> Personal Training (AI Rules)</div>
+                <div><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+            <div class="set-menu-item" onclick="openSubPage('sub-audio','AI Chat Model & Voice Settings')">
+                <div class="left"><i class="fa-solid fa-microchip"></i> AI Chat Model & Voice Settings</div>
+                <div><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+            <div class="set-menu-item" onclick="openSelfTest()">
+                <div class="left"><i class="fa-solid fa-bullseye"></i> 🎯 Self-Test (Mock Exam)</div>
+                <div><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+        </div>
+        <div class="settings-subpage" id="sub-rules">
+            <div class="form-group">
+                <label>Train your AI (Aapka name, rules, kya bolna hai):</label>
+                <textarea id="personalRulesInput" maxlength="2000" rows="6" placeholder="Example: Mera naam Raj hai, main affiliate marketer hoon..."></textarea>
+                <div style="text-align:right;font-size:12px;color:var(--text-muted);margin-top:5px;" id="charCount">0/2000</div>
+                <button class="save-btn" onclick="savePersonalRules()">Save Rules</button>
+            </div>
+        </div>
+        <div class="settings-subpage" id="sub-audio">
+            <div class="form-group">
+                <label>Select AI Chat Model:</label>
+                <select id="userModelSelect" onchange="saveUserPreferences()">
+                    <optgroup label="Sarvam AI (Admin / Default)">
+                        <option value="sarvam-105b">Sarvam 105B (Best quality, deeper reasoning)</option>
+                        <option value="sarvam-30b">Sarvam 30B (Fast & efficient)</option>
+                    </optgroup>
+                    <optgroup label="Google Gemini (Requires Personal API Key)">
+                        <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview</option>
+                        <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                        <option value="gemini-3-flash-preview">Gemini 3 Flash Preview</option>
+                        <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="form-group" style="margin-top:20px;">
+                <label style="color:#f59e0b;">Personal Gemini API Keys (Multiple Supported):</label>
+                <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">Ek se zyada keys add kar sakte hain. Quota khatam hote hi automatic next key pe switch ho jayega.</p>
+                <div class="add-key-wrapper">
+                    <input type="password" id="geminiKeyInput" placeholder="Paste your Gemini key & click Add...">
+                    <button class="save-btn" style="background:#f59e0b;" onclick="addPersonalGeminiKey()">Add API Key</button>
+                </div>
+                <div id="geminiKeysList" style="margin-top:12px;display:flex;flex-direction:column;gap:6px;"></div>
+            </div>
+            <div style="height:1px;background:var(--border);margin:25px 0;"></div>
+            <div class="form-group">
+                <label>Auto-speak AI replies in Hindi?</label>
+                <select id="userDeviceAudio" onchange="saveUserPreferences()">
+                    <option value="off">Off (Silent)</option>
+                    <option value="on">On (Hindi Voice)</option>
+                </select>
+                <p style="font-size:12px;color:#10a37f;margin-top:8px;line-height:1.5;"><i class="fa-solid fa-circle-check"></i> <b>Gemini key save hai toh</b> Google Gemini TTS automatically use hogi (natural Hindi voice 🎙️). Warna browser ki basic voice chalegi.</p>
+            </div>
+            <div class="form-group" style="margin-top:15px;">
+                <label>Select Sarvam AI Voice:</label>
+                <select id="userVoiceSelect" onchange="saveUserPreferences()">
+                    <option value="aditya">Aditya (Male)</option>
+                    <option value="anushka">Anushka (Female)</option>
+                    <option value="rohan">Rohan (Male)</option>
+                    <option value="priya">Priya (Female)</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin-top:20px;">
+                <label style="color:#38bdf8;">Personal Sarvam API Key (Voice ke liye):</label>
+                <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">Chat ke liye admin ka key use hoga. Voice feature ke liye apna key daalein.</p>
+                <div class="add-key-wrapper">
+                    <input type="password" id="sarvamKeyInput" placeholder="Paste your Sarvam key here...">
+                    <button class="save-btn" onclick="savePersonalSarvamKey()">Save Sarvam Key</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SELF-TEST OVERLAY -->
+<div class="settings-overlay" id="selfTestOverlay">
+    <div class="settings-header">
+        <button class="back-btn" style="display:none;" id="stBackBtn"><i class="fa-solid fa-arrow-left"></i></button>
+        <h3 id="selfTestTitle">🎯 Self-Test</h3>
+        <button class="close-btn" onclick="closeSelfTest()"><i class="fa-solid fa-times"></i></button>
+    </div>
+    <div class="settings-body" id="stBodyArea">
+        <div id="stHome"></div>
+        <div id="stQuestionView" style="display:none;padding:20px;"></div>
+        <div id="stResultView" style="display:none;padding:20px;"></div>
+    </div>
+</div>
+
+<div class="memory-overlay" id="memoryOverlay" onclick="closeMemoryOnOutside(event)">
+    <div class="memory-panel" id="memoryPanel">
+        <div class="memory-header">
+            <span><i class="fa-solid fa-brain"></i> My Memory</span>
+            <button onclick="closeMemoryPanel()"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <div class="memory-body">
+            <p style="font-size:12px;color:var(--text-muted);line-height:1.5;margin-bottom:4px;">AI is chat mein lead ke baare mein jo samjha hai woh yahan save hota hai. Tum khud bhi edit kar sakte ho.</p>
+            <div class="mem-field">
+                <label><i class="fa-solid fa-user" style="margin-right:4px;"></i>Lead Ka Naam</label>
+                <input type="text" id="mem-name" placeholder="e.g. Rohit, Priya...">
+            </div>
+            <div class="mem-field">
+                <label><i class="fa-solid fa-briefcase" style="margin-right:4px;"></i>Lead Type</label>
+                <select id="mem-type">
+                    <option value="">-- Pata Nahi --</option>
+                    <option value="Student">Student</option>
+                    <option value="Working Professional">Working Professional</option>
+                    <option value="Housewife">Housewife</option>
+                    <option value="Business Owner">Business Owner</option>
+                    <option value="Unemployed">Unemployed / Job Dhundh Raha</option>
+                </select>
+            </div>
+            <div class="mem-field">
+                <label><i class="fa-solid fa-heart-crack" style="margin-right:4px;"></i>Pain Points</label>
+                <textarea id="mem-pain" rows="2" placeholder="e.g. Paise ki dikkat, time nahi..."></textarea>
+            </div>
+            <div class="mem-field">
+                <label><i class="fa-solid fa-circle-question" style="margin-right:4px;"></i>Doubts / Objections</label>
+                <textarea id="mem-doubts" rows="2" placeholder="e.g. Trust issue hai, soch raha hai..."></textarea>
+            </div>
+            <div class="mem-field">
+                <label><i class="fa-solid fa-fire" style="margin-right:4px;"></i>Lead Status</label>
+                <select id="mem-status">
+                    <option value="Cold">Cold ❄️ — Abhi interested nahi</option>
+                    <option value="Engaged">Engaged 👀 — Baat ho rahi hai</option>
+                    <option value="Objection">Objection 🚧 — Rok raha kuch</option>
+                    <option value="Hot">Hot 🔥 — Lene wala hai</option>
+                    <option value="Closed">Closed ✅ — Payment ho gayi</option>
+                    <option value="Dead">Dead 🚫 — Blocked / Not Interested</option>
+                </select>
+            </div>
+            <button class="mem-save-btn" onclick="saveMemoryPanel()"><i class="fa-solid fa-floppy-disk"></i> Save & Apply</button>
+            <p class="mem-note">Yeh memory sirf is chat ke andar kaam karta hai.</p>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-msg" id="toastMsg"></div>
+<div id="novaAwakeOverlay">
+    <div class="nova-pulse-ring"><i class="fa-solid fa-microphone-lines"></i></div>
+    <div class="nova-label">🎤 Bolo!</div>
+    <div class="nova-sub">Main sun raha hoon...</div>
+    <button class="nova-cancel" onclick="window.novaEngine&&window.novaEngine.cancelActive()">Ruk ja ✕</button>
+</div>
+
+<!-- FIREBASE & LOGIC -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, get, set, push, update, remove, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBVLLE1KvEF1R4PpEZMydRmkA7U4z1ghiU",
+      authDomain: "lafzomeet.firebaseapp.com",
+      databaseURL: "https://lafzomeet-default-rtdb.firebaseio.com",
+      projectId: "lafzomeet",
+      storageBucket: "lafzomeet.firebasestorage.app",
+      messagingSenderId: "324776514390",
+      appId: "1:324776514390:web:97baaf7788b69880013cf7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Expose for WA connect module
+    window._fbDb = db;
+    window._fbFunctions = { onValue, ref };
+
+    // ======= STATE =======
+    let userPhone = localStorage.getItem('mentorProPhone') || null;
+
+    let adminSettings = {};
+    let globalSarvamKeyStore = "";
+    let kbModules = {};
+    let mySarvamApiKey = "";
+    let myGeminiApiKey = ""; // active key (kept for backward-compat)
+    let myGeminiKeysList = []; // array of all user-added Gemini keys
+    let myGeminiActiveIndex = 0; // pointer to currently-active key
+    let myGeminiExhaustedKeys = {}; // {keyMasked: true} runtime-only quota-exhausted markers
+    let myDeviceAudio = "off";
+    let myPersonalRules = "";
+
+    // Chat state
+    let currentChatId = null;
+    let currentChatMessages = [];
+    let allChats = {};
+
+    // Lead Memory state
+    let leadMemory = { name: "", type: "", painPoints: "", doubts: "", status: "Cold", nextFollowUpStamp: 0 };
+
+    window.msgCache = {};
+    window.scriptCache = {}; 
+    window.audioBlobCache = {};
+    window.currentAudioPlayer = null;
+
+    const loader = document.getElementById('loader');
+
+    // ======= INITIAL LOAD =======
+    window.onload = () => {
+        if (userPhone) {
+            showPage('dashboardPage');
+            checkUserStatus();
+        } else {
+            showPage('phoneAuthPage');
+        }
+    };
+
+    window.loginWithPhone = async () => {
+        const phone = document.getElementById('mobileNumberInput').value.trim();
+        if (phone.length < 10) return alert("Please enter a valid 10 digit mobile number!");
+        
+        userPhone = phone;
+        localStorage.setItem('mentorProPhone', phone);
+        showPage('dashboardPage');
+        await checkUserStatus();
+    };
+
+    // ======= TOAST =======
+    function showToast(msg, isError = false) {
+        const t = document.getElementById('toastMsg');
+        t.textContent = msg;
+        t.style.background = isError ? '#1f0d0d' : '#0d1f0d';
+        t.style.borderColor = isError ? '#ef4444' : '#10b981';
+        t.style.color = isError ? '#fca5a5' : '#6ee7b7';
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2800);
+    }
+    window.showToast = showToast;
+
+    // ======= CHAR COUNT =======
+    document.getElementById('personalRulesInput').addEventListener('input', function() {
+        document.getElementById('charCount').innerText = this.value.length + '/2000';
+    });
+
+    window.showPage = (id) => {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id)?.classList.add('active');
+    }
+
+    // ======= LOAD USER DATA =======
+    window.checkUserStatus = async () => {
+        if(!userPhone) return;
+        loader.classList.add('active');
+        try {
+            const setSnap = await get(ref(db, 'adminSettings'));
+            if(setSnap.exists()) {
+                adminSettings = setSnap.val() || {};
+                globalSarvamKeyStore = adminSettings.globalSarvamKey || "";
+                if(adminSettings.knowledgeBase) kbModules = adminSettings.knowledgeBase;
+            }
+        } catch (e) { console.error("Setting load error:", e); }
+
+        onValue(ref(db, `phoneUsers/${userPhone}`), (snap) => {
+            loader.classList.remove('active');
+            let uData = snap.val();
+            if (!uData) {
+                uData = { status: "active", phone: userPhone, activeModel: "sarvam-105b", sarvamVoice: "aditya", sarvamApiKey: "", geminiApiKey: "", geminiApiKeys: [], geminiActiveIndex: 0, deviceAudio: "off", personalRules: "" };
+                update(ref(db, `phoneUsers/${userPhone}`), uData);
+            }
+            if (uData.status === "active" || !uData.status) {
+                mySarvamApiKey = uData.sarvamApiKey || "";
+                // Multi-key support: prefer geminiApiKeys array; fallback to legacy single key
+                myGeminiKeysList = Array.isArray(uData.geminiApiKeys) ? uData.geminiApiKeys.filter(k => k && k.trim()) : [];
+                if (myGeminiKeysList.length === 0 && uData.geminiApiKey) {
+                    myGeminiKeysList = [uData.geminiApiKey];
+                }
+                myGeminiActiveIndex = (typeof uData.geminiActiveIndex === 'number' && uData.geminiActiveIndex < myGeminiKeysList.length) ? uData.geminiActiveIndex : 0;
+                myGeminiApiKey = myGeminiKeysList[myGeminiActiveIndex] || "";
+                myDeviceAudio = uData.deviceAudio || "off";
+                myPersonalRules = uData.personalRules || "";
+                document.getElementById('userModelSelect').value = uData.activeModel || "sarvam-105b";
+                document.getElementById('userVoiceSelect').value = uData.sarvamVoice || "aditya";
+                document.getElementById('userDeviceAudio').value = myDeviceAudio;
+                document.getElementById('personalRulesInput').value = myPersonalRules;
+                document.getElementById('geminiKeyInput').value = "";
+                renderGeminiKeysList();
+                document.getElementById('sarvamKeyInput').value = mySarvamApiKey;
+                loadChatHistory();
+            } else {
+                alert("Your account is not active.");
+            }
+        });
+    }
+
+    // ======= CHAT HISTORY =======
+    function loadChatHistory() {
+        onValue(ref(db, `userChats/${userPhone}`), (snap) => {
+            allChats = {};
+            if(snap.exists()) {
+                snap.forEach(child => { allChats[child.key] = child.val(); });
+            }
+            renderChatHistoryList();
+            if(!currentChatId) showWelcomeScreen();
+        });
+    }
+
+    function renderChatHistoryList() {
+        const container = document.getElementById('chatHistoryList');
+        const chatIds = Object.keys(allChats).sort((a, b) => (allChats[b].updatedAt || 0) - (allChats[a].updatedAt || 0));
+
+        if(chatIds.length === 0) {
+            container.innerHTML = `<div style="font-size:12px;color:var(--text-muted);padding:10px;text-align:center;">Koi purana chat nahi</div>`;
+            return;
+        }
+
+        const now = Date.now();
+        const oneDayMs = 86400000;
+        const todayChats = [], yesterdayChats = [], olderChats = [];
+        chatIds.forEach(id => {
+            const age = now - (allChats[id].updatedAt || 0);
+            if(age < oneDayMs) todayChats.push(id);
+            else if(age < oneDayMs * 2) yesterdayChats.push(id);
+            else olderChats.push(id);
+        });
+
+        let html = '';
+        if(todayChats.length) { html += `<div class="chat-history-section">Today</div>`; todayChats.forEach(id => html += buildChatItem(id)); }
+        if(yesterdayChats.length) { html += `<div class="chat-history-section">Yesterday</div>`; yesterdayChats.forEach(id => html += buildChatItem(id)); }
+        if(olderChats.length) { html += `<div class="chat-history-section">Older</div>`; olderChats.forEach(id => html += buildChatItem(id)); }
+        container.innerHTML = html;
+    }
+
+    function buildChatItem(id) {
+        const chat = allChats[id];
+        const title = chat.title || "New Chat";
+        const isActive = id === currentChatId ? 'active-chat' : '';
+        return `<div class="chat-history-item ${isActive}" id="chatItem-${id}" onclick="loadChat('${id}')">
+            <i class="fa-regular fa-message" style="font-size:12px;flex-shrink:0;"></i>
+            <span class="chat-title-text">${escHtml(title)}</span>
+            <button class="del-chat-btn" onclick="deleteChat(event,'${id}')"><i class="fa-solid fa-trash"></i></button>
+        </div>`;
+    }
+
+    function escHtml(str) {
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    window.loadChat = function(chatId) {
+        if(currentChatId === chatId) { closeMobileSidebar(); return; }
+        currentChatId = chatId;
+        currentChatMessages = [];
+        leadMemory = { name: "", type: "", painPoints: "", doubts: "", status: "Cold", nextFollowUpStamp: 0 };
+        const chat = allChats[chatId];
+        if (chat && chat.leadMemory) {
+            leadMemory = Object.assign(leadMemory, chat.leadMemory);
+        }
+        
+        updateMemoryBtn();
+        updateFunnelUI();
+        checkFollowUpTimer();
+
+        document.querySelectorAll('.chat-history-item').forEach(el => el.classList.remove('active-chat'));
+        const el = document.getElementById(`chatItem-${chatId}`);
+        if(el) el.classList.add('active-chat');
+
+        if(chat && chat.messages) {
+            const msgs = chat.messages;
+            currentChatMessages = Object.values(msgs).sort((a,b) => (a.timestamp||0)-(b.timestamp||0));
+            renderAllMessages();
+        } else {
+            showWelcomeScreen();
+        }
+        closeMobileSidebar();
+    }
+
+    function parseAIOutputToUI(text, bubbleId) {
+        let scriptText = "";
+        let mistakeContent = "";
+
+        let processed = text.replace(/\[\[SCRIPT\]\]([\s\S]*?)\[\[\/SCRIPT\]\]/g, (match, p1) => {
+            scriptText = p1.trim();
+            return `%%%SCRIPT%%%`;
+        });
+        processed = processed.replace(/\[\[MISTAKE\]\]([\s\S]*?)\[\[\/MISTAKE\]\]/g, (match, p1) => {
+            mistakeContent = p1.trim();
+            return `%%%MISTAKE%%%`;
+        });
+
+        let finalHtml = marked.parse(processed);
+
+        if (mistakeContent) {
+            const mistakeBox = `
+            <div class="mistake-warning-box">
+                <div class="mw-title"><i class="fa-solid fa-triangle-exclamation"></i> Mentor Warning — Teri Galti</div>
+                ${escHtml(mistakeContent)}
+            </div>`;
+            finalHtml = finalHtml.replace(/<p>\s*%%%MISTAKE%%%\s*<\/p>/g, mistakeBox).replace('%%%MISTAKE%%%', mistakeBox);
+        }
+
+        if (scriptText) {
+            window.scriptCache[`${bubbleId}_1`] = scriptText;
+            const box1 = `
+            <div class="script-box">
+                <div class="script-title"><i class="fa-solid fa-comment-dots"></i> Yeh Bolo Lead Ko</div>
+                <div class="script-content">${escHtml(scriptText)}</div>
+                <div class="script-actions">
+                    <button class="script-btn copy" onclick="copySpecificScript('${bubbleId}_1')"><i class="fa-solid fa-copy"></i> Copy</button>
+                    <button class="script-btn wa" onclick="waSpecificScript('${bubbleId}_1')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                    <button class="script-btn voice-opt" id="vbtn-${bubbleId}_1" onclick="generateOptionAudio('${bubbleId}','${bubbleId}_1',this)"><i class="fa-solid fa-microphone"></i> Voice</button>
+                </div>
+                <div id="opt-voice-${bubbleId}_1"></div>
+            </div>`;
+            finalHtml = finalHtml.replace(/<p>\s*%%%SCRIPT%%%\s*<\/p>/g, box1).replace('%%%SCRIPT%%%', box1);
+        }
+
+        return finalHtml;
+    }
+
+    function renderAllMessages() {
+        const chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML = '';
+        currentChatMessages.forEach(msg => {
+            if(msg.role === 'user') {
+                chatBox.insertAdjacentHTML('beforeend',
+                    `<div class="message-row user"><div class="message-content-inner"><div class="msg-text">${escHtml(msg.content)}</div></div></div>`
+                );
+            } else if(msg.role === 'assistant') {
+                const bubbleId = 'hist-' + (msg.timestamp || Math.random());
+                window.msgCache[bubbleId] = msg.content;
+                chatBox.insertAdjacentHTML('beforeend',
+                    `<div class="message-row ai"><div class="message-content">
+                        <div class="message-content-inner">
+                            <div class="avatar"><i class="fa-solid fa-robot"></i></div>
+                            <div class="msg-text">
+                                <div>${parseAIOutputToUI(msg.content, bubbleId)}</div>
+                            </div>
+                        </div>
+                        <div id="action-${bubbleId}" class="action-bar">
+                            <button class="action-btn" onclick="generateAndShowAudio('${bubbleId}')"><i class="fa-solid fa-microphone"></i> Voice Note (Full)</button>
+                            <button class="action-btn" onclick="shareToWA('${bubbleId}')"><i class="fa-brands fa-whatsapp"></i> Text WA (Full)</button>
+                        </div>
+                    </div></div>`
+                );
+            }
+        });
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    window.deleteChat = async function(e, chatId) {
+        e.stopPropagation();
+        if(!confirm("Yeh chat delete karna chahte ho?")) return;
+        await remove(ref(db, `userChats/${userPhone}/${chatId}`));
+        if(currentChatId === chatId) {
+            currentChatId = null;
+            currentChatMessages = [];
+            leadMemory = { name: "", type: "", painPoints: "", doubts: "", status: "Cold", nextFollowUpStamp: 0 };
+            updateMemoryBtn(); updateFunnelUI(); checkFollowUpTimer();
+            showWelcomeScreen();
+        }
+    }
+
+    window.startNewChat = function() {
+        currentChatId = null;
+        currentChatMessages = [];
+        leadMemory = { name: "", type: "", painPoints: "", doubts: "", status: "Cold", nextFollowUpStamp: 0 };
+        updateMemoryBtn(); updateFunnelUI(); checkFollowUpTimer();
+        document.querySelectorAll('.chat-history-item').forEach(el => el.classList.remove('active-chat'));
+        showWelcomeScreen();
+        closeMobileSidebar();
+    }
+
+    function showWelcomeScreen() {
+        const chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML = `<div class="welcome-screen" id="welcomeScreen">
+            <div class="welcome-icon"><i class="fa-solid fa-robot"></i></div>
+            <h2>Mentor Pro AI</h2>
+            <p>Apni lead ki situation describe karo — ya neeche se ek situation select karo.</p>
+            <div class="quick-chips">
+                <div class="quick-chip" onclick="useQuickChip('Lead ne reply nahi kiya 2 din se, kya karun?')"><i class="fa-solid fa-clock"></i> No Reply</div>
+                <div class="quick-chip" onclick="useQuickChip('Lead bol raha hai paisa nahi hai, kya bolunga?')"><i class="fa-solid fa-rupee-sign"></i> Paisa Nahi</div>
+                <div class="quick-chip" onclick="useQuickChip('Lead bol raha hai sochna hai, kya reply karun?')"><i class="fa-solid fa-brain"></i> Sochna Hai</div>
+                <div class="quick-chip" onclick="useQuickChip('Lead bol raha hai scam lagta hai, kaise handle karun?')"><i class="fa-solid fa-shield"></i> Scam Bola</div>
+                <div class="quick-chip" onclick="useQuickChip('Call pe lead se pehli baar baat karni hai, kya bolunga?')"><i class="fa-solid fa-phone"></i> Call Tips</div>
+                <div class="quick-chip" onclick="useQuickChip('Lead interested lag raha tha par ab cold ho gaya, kya karun?')"><i class="fa-solid fa-temperature-low"></i> Cold Ho Gaya</div>
+                <div class="quick-chip" onclick="useQuickChip('Pehla message kaise bhejun naye lead ko?')"><i class="fa-solid fa-paper-plane"></i> Pehla Message</div>
+            </div>
+            <div class="welcome-tips" style="margin-top:18px;">
+                <div class="welcome-tip"><i class="fa-solid fa-microphone"></i><span>Mic button se bolke bhi describe karo situation — type karne ki zarurat nahi.</span></div>
+                <div class="welcome-tip"><i class="fa-solid fa-chart-line"></i><span>Funnel bar mein lead ka status track hota rahega — Cold se Hot tak.</span></div>
+            </div>
+        </div>`;
+    }
+
+    window.useQuickChip = function(text) {
+        const aiInput = document.getElementById('aiInput');
+        aiInput.value = text;
+        aiInput.focus();
+        setTimeout(() => window.sendMsg(), 200);
+    }
+
+    async function saveMsgToFirebase(role, content) {
+        if(!userPhone || !currentChatId) return;
+        const msgRef = push(ref(db, `userChats/${userPhone}/${currentChatId}/messages`));
+        await set(msgRef, { role, content, timestamp: Date.now() });
+        await update(ref(db, `userChats/${userPhone}/${currentChatId}`), { updatedAt: Date.now() });
+    }
+
+    async function createNewChatInFirebase(firstMessage) {
+        let title = firstMessage.trim();
+        title = title.replace(/^(yaar\s+|bhai\s+|boss\s+|sir\s+|ek kaam karo\s+|ek baat\s+|okay\s+|haan\s+)/i, '');
+        title = title.charAt(0).toUpperCase() + title.slice(1);
+        if (title.length > 45) title = title.substring(0, 42) + '...';
+
+        const newChatRef = push(ref(db, `userChats/${userPhone}`));
+        await set(newChatRef, { title, createdAt: Date.now(), updatedAt: Date.now() });
+        return newChatRef.key;
+    }
+
+    function updateMemoryBtn() {
+        const btn = document.getElementById('memoryBtn');
+        if (!btn) return;
+        const hasData = !!(leadMemory.name || leadMemory.type || leadMemory.painPoints || leadMemory.doubts);
+        btn.classList.toggle('has-data', hasData);
+        btn.title = hasData ? `Lead: ${leadMemory.name || 'Unknown'} | ${leadMemory.status}` : 'Lead Memory (Khaali)';
+    }
+
+    function updateFunnelUI() {
+        const bar = document.getElementById('funnelBar');
+        if(!currentChatId) { bar.classList.remove('active'); return; }
+        bar.classList.add('active');
+        
+        const steps = ['Cold', 'Engaged', 'Objection', 'Hot', 'Closed'];
+        let currentStatus = leadMemory.status || 'Cold';
+        let isDead = currentStatus === 'Dead';
+        
+        document.querySelectorAll('.funnel-step').forEach(el => {
+            el.classList.remove('active'); el.classList.remove('dead');
+        });
+
+        if(isDead) {
+            document.querySelectorAll('.funnel-step').forEach(el => el.classList.add('dead'));
+        } else {
+            let passed = true;
+            steps.forEach(st => {
+                let el = document.getElementById('fs-' + st.toLowerCase());
+                if(passed && el) el.classList.add('active');
+                if(st === currentStatus) passed = false;
+            });
+        }
+    }
+
+    function checkFollowUpTimer() {
+        const banner = document.getElementById('followUpBanner');
+        if(!currentChatId || !leadMemory.nextFollowUpStamp) { banner.classList.remove('active'); return; }
+        
+        if(Date.now() > leadMemory.nextFollowUpStamp && leadMemory.status !== 'Closed' && leadMemory.status !== 'Dead') {
+            banner.classList.add('active');
+        } else {
+            banner.classList.remove('active');
+        }
+    }
+
+    window.generateFollowUp = function() {
+        document.getElementById('aiInput').value = "Boss is lead ka follow up time aa gaya hai, koi solid follow up script do dono angles (Soft & Urgency) mein.";
+        document.getElementById('followUpBanner').classList.remove('active');
+        window.sendMsg();
+    }
+
+    window.openMemoryPanel = function() {
+        document.getElementById('mem-name').value = leadMemory.name || '';
+        document.getElementById('mem-type').value = leadMemory.type || '';
+        document.getElementById('mem-pain').value = leadMemory.painPoints || '';
+        document.getElementById('mem-doubts').value = leadMemory.doubts || '';
+        document.getElementById('mem-status').value = leadMemory.status || 'Cold';
+        document.getElementById('memoryOverlay').classList.add('active');
+    }
+
+    window.closeMemoryPanel = function() {
+        document.getElementById('memoryOverlay').classList.remove('active');
+    }
+
+    window.closeMemoryOnOutside = function(e) {
+        if (e.target === document.getElementById('memoryOverlay')) closeMemoryPanel();
+    }
+
+    window.saveMemoryPanel = async function() {
+        leadMemory.name = document.getElementById('mem-name').value.trim();
+        leadMemory.type = document.getElementById('mem-type').value;
+        leadMemory.painPoints = document.getElementById('mem-pain').value.trim();
+        leadMemory.doubts = document.getElementById('mem-doubts').value.trim();
+        leadMemory.status = document.getElementById('mem-status').value;
+        updateMemoryBtn();
+        updateFunnelUI();
+        closeMemoryPanel();
+        showToast('Memory saved ✅ — Next message mein apply hoga');
+        if (currentChatId && userPhone) {
+            try { await update(ref(db, `userChats/${userPhone}/${currentChatId}/leadMemory`), leadMemory); } catch(e) {}
+        }
+    }
+
+    async function extractMemoryWithAI() {
+        if (!currentChatId || !userPhone || currentChatMessages.length < 2) return;
+
+        const context = currentChatMessages.slice(-6).map(m => `${m.role}: ${m.content}`).join('\n');
+
+        const sysPrompt = `You are analyzing a chat between:
+- USER = the affiliate marketer (your student who is USING this app and talking to the mentor AI)
+- ASSISTANT = the Mentor AI giving advice
+The USER is describing their LEAD — a THIRD PERSON they are trying to sell a product to.
+
+YOUR JOB: Extract details about the LEAD (the third person being sold to) into JSON.
+
+CRITICAL NAME RULE:
+- LEAD name = ONLY the person BEING SOLD TO (the third person).
+- Examples of lead name clues: "uska naam Priya hai", "Rahul bol raha hai", "meri lead ka naam Amit hai"
+- NEVER use the USER's name, their email, or assistant's name as lead name.
+- If lead name is NOT clearly mentioned in the chat, return "" for name.
+- When in ANY doubt about name, return "".
+
+PAIN POINTS RULE: Extract NEW pain points mentioned. If none found, return "".
+DOUBTS RULE: Extract NEW objections/doubts expressed by the LEAD. If none found, return "".
+STATUS RULE: Must be exactly one of: Cold, Engaged, Objection, Hot, Closed, Dead.
+  - Dead = lead blocked / abused / said never contact again.
+  - Objection = lead expressed doubt/concern but didn't say no.
+FOLLOW UP HOURS: Number 1-24. When should user next message the lead?
+
+Return ONLY valid JSON, nothing else:
+{
+  "name": "",
+  "type": "Student/Housewife/Professional/Business/Unknown",
+  "newPainPoint": "",
+  "newDoubt": "",
+  "status": "Cold",
+  "followUpHours": 6
+}`;
+
+        const keyToUse = globalSarvamKeyStore || mySarvamApiKey;
+        if (!keyToUse) return;
+
+        try {
+            const response = await fetch(`https://api.sarvam.ai/v1/chat/completions`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'api-subscription-key': keyToUse },
+                body: JSON.stringify({ model: "sarvam-105b", messages: [{role:"system", content:sysPrompt}, {role:"user", content:context}], temperature: 0.1 })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                let output = data.choices[0].message.content;
+                const jsonMatch = output.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                    const parsed = JSON.parse(jsonMatch[0]);
+
+                    if (parsed.name && parsed.name.trim() && !leadMemory.name) {
+                        const cleanName = parsed.name.trim();
+                        if (cleanName.length <= 20 && !cleanName.includes('@') && !cleanName.includes('.com')) {
+                            leadMemory.name = cleanName;
+                        }
+                    }
+
+                    if (parsed.type && parsed.type !== "Unknown" && !leadMemory.type) {
+                        leadMemory.type = parsed.type;
+                    }
+
+                    if (parsed.newPainPoint && parsed.newPainPoint.trim()) {
+                        const newPP = parsed.newPainPoint.trim();
+                        if (!leadMemory.painPoints) {
+                            leadMemory.painPoints = newPP;
+                        } else {
+                            const existingLower = leadMemory.painPoints.toLowerCase();
+                            const newLower = newPP.toLowerCase().substring(0, 25);
+                            if (!existingLower.includes(newLower)) {
+                                leadMemory.painPoints = leadMemory.painPoints + ' | ' + newPP;
+                            }
+                        }
+                    }
+
+                    if (parsed.newDoubt && parsed.newDoubt.trim()) {
+                        const newD = parsed.newDoubt.trim();
+                        if (!leadMemory.doubts) {
+                            leadMemory.doubts = newD;
+                        } else {
+                            const existingLower = leadMemory.doubts.toLowerCase();
+                            const newLower = newD.toLowerCase().substring(0, 25);
+                            if (!existingLower.includes(newLower)) {
+                                leadMemory.doubts = leadMemory.doubts + ' | ' + newD;
+                            }
+                        }
+                    }
+
+                    if (parsed.status) leadMemory.status = parsed.status;
+
+                    if (parsed.followUpHours && leadMemory.status !== "Closed" && leadMemory.status !== "Dead") {
+                        leadMemory.nextFollowUpStamp = Date.now() + (parsed.followUpHours * 60 * 60 * 1000);
+                    }
+
+                    updateMemoryBtn();
+                    updateFunnelUI();
+                    await update(ref(db, `userChats/${userPhone}/${currentChatId}/leadMemory`), leadMemory);
+                }
+            }
+        } catch(e) { console.error("Background memory extraction failed:", e); }
+    }
+
+    function detectIntent(message) {
+        const msg = message.toLowerCase().trim();
+        const words = msg.split(/\s+/);
+
+        if (words.length <= 3 && /^(hi|hello|hey|hii|ok|okay|haan|nahi|thanks|shukriya|accha|theek|wah|nice|great|hmm|hm|bye|start|help|bolo|batao|kya|kaise|kaisa)/.test(msg)) {
+            return 'general';
+        }
+
+        if (/\blead\b|bol raha hai|bol rahi hai|bol raha tha|bol rahi thi|reply diya|reply kiya|reply nahi|usne kaha|usne bola|woh bola|woh boli|uska|uske|uski|unka|unke|unki|meri lead|mera lead|prospect|join nahi karna|payment karna|afford nahi|paisa nahi|scam bola|fake bola|trust nahi|time nahi hai|busy hai|ghar wale|soch raha hai|interested hai|interested nahi|price puchha|blocked|unhone|woh interested|usse|unhe/i.test(msg)) {
+            return 'lead';
+        }
+
+        if (/kya (bolunga|likhunga|bhejun|bhejunga|kahunga|reply karun|bolun|likhun|send karun)/i.test(msg) && words.length > 7) {
+            return 'lead';
+        }
+
+        if (/call (pe|mein|par) kya|call kaise|call script|pehla message|pehli baat|warm up|rapport kaise|intro kaise|opening kaise|follow up (kaise|strategy|kab)|kitne din baad|kitne ghante|subject line|profile kaise|bio kaise|conversion|success rate|earning|commission|kitne lead|product knowledge|program kya hai|features kya|approach kya|strategy kya|sikha do|seekhna hai|tips do|advice do|samjhao|explain kar|kaise karte hain|kya hota hai|mujhe help|help chahiye|kya karna chahiye|overall|general/i.test(msg)) {
+            return 'advice';
+        }
+
+        if (words.length <= 5) return 'general';
+        return 'lead';
+    }
+
+    function hasBannedWord(text, bannedStr) {
+        if(!bannedStr || !text) return false;
+        const banned = bannedStr.split(/[\n,]+/).map(w => w.trim().toLowerCase()).filter(w => w.length > 0);
+        const lowerText = text.toLowerCase();
+        return banned.some(word => lowerText.includes(word));
+    }
+
+    function smartScanContext(userQuery) {
+        const low = userQuery.toLowerCase();
+        const words = low.split(/[\s,।?!]+/).filter(w => w.length > 2);
+        let correctionChunks = [], normalChunks = [];
+
+        for(let key in kbModules) {
+            const mod = kbModules[key];
+            if(!mod || !mod.title) continue;
+            const isCorrection = mod.title.toLowerCase().startsWith('correction:') || (mod.content || '').includes('[STRICT CORRECTION');
+            const titleWords = mod.title.toLowerCase().split(/[\s,]+/).filter(w => w.length > 1);
+            let score = isCorrection ? 5 : 0;
+            titleWords.forEach(kw => { if(low.includes(kw.trim())) score += 2; });
+            words.forEach(w => { if((mod.content || '').toLowerCase().includes(w)) score += 1; });
+            const chunk = { score, content: mod.content, title: mod.title, isCorrection };
+            if(isCorrection && score >= 5) correctionChunks.push(chunk);
+            else if(!isCorrection && score > 0) normalChunks.push(chunk);
+        }
+
+        correctionChunks.sort((a,b) => b.score - a.score);
+        normalChunks.sort((a,b) => b.score - a.score);
+        const topChunks = [...correctionChunks.slice(0, 2), ...normalChunks].slice(0, 3);
+        if(topChunks.length === 0) return "";
+        return topChunks.map((c, i) => {
+            const label = c.isCorrection ? `⚠️ STRICT CORRECTION [HIGHEST PRIORITY] - "${c.title}"` : `TRAINING CHUNK ${i+1} - "${c.title}"`;
+            return `[${label}]:\n${c.content}`;
+        }).join('\n\n---\n\n');
+    }
+
+    function buildSystemPrompt(userQuery, intent = 'lead') {
+        if (intent === 'general') {
+            return `You are MENTOR AI — India's top Affiliate Marketing & WhatsApp Sales Coach.
+The USER is having a CASUAL CONVERSATION. Respond warmly in Hinglish. Be SHORT and friendly.
+Ask what they need help with if unclear. DO NOT use [[SCRIPT]] tags. No scripts needed.
+User's personal rules: ${myPersonalRules || "None"}`;
+        }
+
+        if (intent === 'advice') {
+            return `You are MENTOR AI — India's most advanced WhatsApp Sales Coach for Affiliate Marketing.
+The USER is asking for GENERAL ADVICE, STRATEGY, or TIPS — they are NOT talking about a specific lead right now.
+Your job: Give clear, practical, actionable Hinglish advice like a senior mentor.
+
+RULES:
+- DO NOT use [[SCRIPT]] format at all.
+- DO NOT give WhatsApp scripts unless explicitly asked.
+- Talk directly, clearly, confidently like a mentor.
+- If it's about call tips: give step-by-step call structure.
+- If it's about approach: give psychology + exact technique.
+- Keep it conversational — not too long, not too short.
+- End with 1 quick action they can take RIGHT NOW.
+
+Admin notes: ${adminSettings.masterPrompt || "N/A"}
+User's personal rules: ${myPersonalRules || "None"}`;
+        }
+
+        const kbContext = smartScanContext(userQuery);
+        const adminRules = adminSettings.masterPrompt || "";
+        const bannedWords = adminSettings.bannedWords || "";
+        const chatLen = currentChatMessages.length;
+
+        let previousAttemptsContext = "";
+        if (currentChatMessages.length > 4) {
+            const prevScripts = currentChatMessages
+                .filter(m => m.role === 'assistant' && m.content.includes('[[SCRIPT'))
+                .slice(-3);
+            if (prevScripts.length > 0) {
+                previousAttemptsContext = `\n==== PREVIOUS SCRIPTS TRIED (DO NOT REPEAT SAME STYLE) ====\n`;
+                prevScripts.forEach((m, i) => {
+                    const scriptMatch = m.content.match(/\[\[SCRIPT\]\]([\s\S]*?)\[\[\/SCRIPT\]\]/);
+                    if (scriptMatch) previousAttemptsContext += `Attempt ${i+1}: "${scriptMatch[1].trim().substring(0, 120)}..."\n`;
+                });
+                previousAttemptsContext += `→ User tried these angles already. Try a FRESH, different psychological approach.\n`;
+            }
+        }
+
+        const leadName = leadMemory.name;
+        let nameInstruction;
+        if (!leadName) {
+            if (chatLen <= 1) {
+                nameInstruction = `⚠️ LEAD KA NAAM UNKNOWN:
+→ Yeh pehla message hai. Script dene se PEHLE lead ka naam naturally poochho.
+→ Example: "Bhai ek kaam karo — lead ka naam bata do, taaki main personally address kar sakun. Phir seedha script dunga."
+→ Script ROKKE rakho jab tak naam na mile. Sirf naam maango is response mein.`;
+            } else {
+                nameInstruction = `⚠️ NAAM ABHI BHI UNKNOWN:
+→ "bhai" / "yaar" use karo generic taur pe scripts mein.
+→ Agar naturally fit ho toh ek baar poochh lo naam.`;
+            }
+        } else {
+            nameInstruction = `✅ LEAD KA NAAM: "${leadName}"
+→ Isko NATURALLY use karo har script mein. Bilkul aise jaise koi dost naam se baat karta hai.`;
+        }
+
+        return `You are MENTOR AI — India's most advanced Sales Psychologist & WhatsApp Closer for Affiliate Marketing.
+Your ONLY mission: Help the USER (a beginner affiliate marketer) write the PERFECT script to close their lead RIGHT NOW.
+
+==== LEAD MEMORY ====
+${nameInstruction}
+- Lead Type: ${leadMemory.type || 'Unknown'}
+- Detected Pain Points: ${leadMemory.painPoints || 'None yet'}
+- Known Doubts/Objections: ${leadMemory.doubts || 'None yet'}
+- Lead Status: ${leadMemory.status || 'Cold'}
+${previousAttemptsContext}
+==== ADMIN MASTER TRAINING ====
+${adminRules || "N/A"}
+
+==== BANNED WORDS — ABSOLUTELY FORBIDDEN ====
+${bannedWords ? `These words/phrases must NEVER appear in your output under any condition:\n${bannedWords}` : "None specified."}
+
+==== KNOWLEDGE BASE — REFERENCE NOTES (READ CAREFULLY) ====
+${kbContext ? `⚠️ Use chunks as psychological INSPIRATION — not as a template to paste.\n\n${kbContext}` : `No KB match. Use elite sales psychology.`}
+
+==== INTELLIGENCE RULES (CRITICAL — READ CAREFULLY) ====
+1. 🔍 MISTAKE DETECTOR: First, analyze the USER's message carefully. If the user made ANY common sales mistake — like begging ("please join karo"), revealing price too early without building value, sending long boring messages, being too desperate, giving too many features without addressing pain, or showing low confidence — you MUST call it out FIRST before giving scripts. Wrap this ONLY if a mistake is found:
+[[MISTAKE]]
+Boss, ek common galti pakdi — [describe mistake clearly in 1-2 lines Hinglish]. [Why it hurts + what to do instead].
+[[/MISTAKE]]
+If no mistake found, do NOT include [[MISTAKE]] tags at all.
+
+2. 📊 CLOSING DETECTOR: Analyze the full conversation history. Based on lead's behavior, status, and tone — evaluate if this lead is CLOSE to closing. If Very High closing chance, make scripts more direct and CTA-focused. If Low, focus on trust building first.
+
+3. 🧠 PATTERN LEARNER: If previous scripts were tried and DIDN'T work (user came back with same lead), the lead needs a COMPLETELY different psychological angle. Don't repeat same style.
+
+4. 💡 MISTAKE CATEGORIES TO WATCH:
+   - Sending price without permission
+   - Asking "kya sochte ho?" multiple times (desperate)
+   - Over-explaining the product instead of the RESULT
+   - No clear call to action at end of message
+   - Being defensive when lead objects
+   - Saying "trust me" or "I promise" (low authority)
+
+==== MANDATORY RESPONSE FORMAT (DO NOT SKIP) ====
+Write 2-4 lines of Hinglish analysis about the lead's mindset — kya soch raha hai, kya asli wajah hai uske reply/objection ke peeche. Direct, sharp, mentor-tone (Boss/Bhai).
+
+[[SCRIPT]]
+[Write EXACT WhatsApp message here — pick the single BEST psychological approach for this specific situation (soft/trust-building agar lead confused/scared hai, ya direct/urgency agar lead ready-to-close lag raha hai). Use lead name naturally. End with engaging question to get reply. No quotation marks.]
+[[/SCRIPT]]
+
+Special Rule: If the user says the lead BLOCKED them or abused them, advise them to move on. In this specific case, DO NOT provide a [[SCRIPT]] tag. Just say: "Boss, dead lead hai. Isko chhod do, next par focus karte hain."`;
+    }
+
+    window.sendMsg = async () => {
+        const inputObj = document.getElementById('aiInput');
+        const usrMsg = inputObj.value.trim();
+        if(!usrMsg) return;
+
+        if(window.speechSynthesis) window.speechSynthesis.cancel();
+        if(isRecording) { await toggleVoiceTyping(); }
+
+        const runModel = document.getElementById('userModelSelect').value || "sarvam-105b";
+        const isGemini = runModel.includes('gemini') || runModel.includes('gemma');
+
+        if(!isGemini && !globalSarvamKeyStore && !mySarvamApiKey) {
+            alert("Admin hasn't configured the Chat Model yet. Please contact support.");
+            return;
+        }
+        if (isGemini && !myGeminiApiKey && myGeminiKeysList.length === 0) {
+            alert("Gemini Models use karne ke liye pehle Settings me apni 'Personal Gemini API Key' daalein.");
+            openSettingsPage();
+            return;
+        }
+
+        if(!currentChatId) {
+            currentChatId = await createNewChatInFirebase(usrMsg);
+        }
+
+        const chatBox = document.getElementById('chatBox');
+        const welcome = document.getElementById('welcomeScreen');
+        if(welcome) welcome.remove();
+
+        chatBox.insertAdjacentHTML('beforeend',
+            `<div class="message-row user"><div class="message-content-inner"><div class="msg-text">${escHtml(usrMsg)}</div></div></div>`
+        );
+        inputObj.value = "";
+        document.getElementById('sendBtn').disabled = true;
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        currentChatMessages.push({ role: 'user', content: usrMsg, timestamp: Date.now() });
+        saveMsgToFirebase('user', usrMsg);
+
+        document.querySelectorAll('.chat-history-item').forEach(el => el.classList.remove('active-chat'));
+        const el = document.getElementById(`chatItem-${currentChatId}`);
+        if(el) el.classList.add('active-chat');
+
+        const bubbleId = "ai-" + Date.now();
+        chatBox.insertAdjacentHTML('beforeend',
+            `<div class="message-row ai" id="${bubbleId}">
+                <div class="message-content">
+                    <div class="message-content-inner">
+                        <div class="avatar"><i class="fa-solid fa-robot"></i></div>
+                        <div class="msg-text">
+                            <div id="text-${bubbleId}">
+                                <span class="typing-dot"></span>
+                                <span class="typing-dot"></span>
+                                <span class="typing-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="action-${bubbleId}"></div>
+                </div>
+            </div>`
+        );
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        try {
+            const intent = detectIntent(usrMsg);
+            const sysPrompt = buildSystemPrompt(usrMsg, intent);
+            let fullText = "";
+            const textContainer = document.getElementById(`text-${bubbleId}`);
+
+            if (isGemini) {
+                let geminiContents = [];
+                const recentHistory = currentChatMessages.slice(-10);
+                recentHistory.forEach(msg => {
+                    let mapRole = msg.role === 'assistant' ? 'model' : 'user';
+                    if (geminiContents.length > 0 && geminiContents[geminiContents.length - 1].role === mapRole) {
+                        geminiContents[geminiContents.length - 1].parts[0].text += "\n" + msg.content;
+                    } else {
+                        geminiContents.push({ role: mapRole, parts: [{ text: msg.content }] });
+                    }
+                });
+
+                const geminiPayload = {
+                    systemInstruction: { parts: [{ text: sysPrompt }] },
+                    contents: geminiContents,
+                    generationConfig: { temperature: 0.82 }
+                };
+
+                // === AUTO-ROTATE GEMINI KEYS ON QUOTA ERROR ===
+                let response;
+                let geminiAttempts = 0;
+                const maxGeminiAttempts = Math.max(1, myGeminiKeysList.length || 1);
+                while(true){
+                    geminiAttempts++;
+                    response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${runModel}:streamGenerateContent?alt=sse&key=${myGeminiApiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(geminiPayload)
+                    });
+                    if(response.ok) break;
+                    // peek error
+                    let errTxt = "";
+                    try { const errData = await response.clone().json(); errTxt = errData.error?.message || ""; } catch(_){}
+                    const isQuota = (response.status === 429) || window.isGeminiQuotaError(errTxt);
+                    if(isQuota && myGeminiKeysList.length > 1 && geminiAttempts < maxGeminiAttempts){
+                        const rotated = await window.rotateGeminiKey();
+                        if(rotated){ continue; } // retry silently with new key
+                    }
+                    // not a quota error, or no more keys -> throw
+                    throw new Error("Gemini API Error: " + (errTxt || "Invalid Key or Model"));
+                }
+
+                textContainer.innerHTML = "";
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = "";
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    buffer += decoder.decode(value, { stream: true });
+                    let lines = buffer.split('\n');
+                    buffer = lines.pop();
+                    for (let line of lines) {
+                        line = line.trim();
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const dataStr = line.substring(6).trim();
+                                if(dataStr === "[DONE]") continue;
+                                const data = JSON.parse(dataStr);
+                                if (data.candidates && data.candidates.length > 0) {
+                                    const parts = data.candidates[0].content?.parts;
+                                    if(parts && parts.length > 0) {
+                                        fullText += parts[0].text;
+                                        textContainer.innerHTML = `<div style="white-space:pre-wrap; opacity:0.8;">${escHtml(fullText)}</div>`;
+                                        chatBox.scrollTop = chatBox.scrollHeight;
+                                    }
+                                }
+                            } catch(e) {}
+                        }
+                    }
+                }
+            } else {
+                let apiMessages = [{ role: "system", content: sysPrompt }];
+                const recentHistory = currentChatMessages.slice(-10);
+                recentHistory.forEach(msg => {
+                    if(msg.role === 'user' || msg.role === 'assistant') {
+                        apiMessages.push({ role: msg.role, content: msg.content });
+                    }
+                });
+
+                const response = await fetch(`https://api.sarvam.ai/v1/chat/completions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'api-subscription-key': globalSarvamKeyStore },
+                    body: JSON.stringify({ model: runModel, messages: apiMessages, temperature: 0.82, stream: true })
+                });
+
+                if(!response.ok) throw new Error("Sarvam Server is busy or key expired. Please wait.");
+
+                textContainer.innerHTML = "";
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n');
+                    for (const line of lines) {
+                        if (line.startsWith('data: ') && line.trim() !== 'data: [DONE]') {
+                            try {
+                                const data = JSON.parse(line.substring(6).trim());
+                                if (data.choices && data.choices[0].delta && data.choices[0].delta.content) {
+                                    fullText += data.choices[0].delta.content;
+                                    textContainer.innerHTML = `<div style="white-space:pre-wrap; opacity:0.8;">${escHtml(fullText)}</div>`;
+                                    chatBox.scrollTop = chatBox.scrollHeight;
+                                }
+                            } catch(e) {}
+                        }
+                    }
+                }
+            }
+
+            const bannedWords = adminSettings.bannedWords || "";
+            let regenerateAttempt = 0;
+
+            while(hasBannedWord(fullText, bannedWords) && regenerateAttempt < 2) {
+                regenerateAttempt++;
+                textContainer.innerHTML = `<span style="color:#f59e0b;font-size:13px;"><i class="fa-solid fa-rotate fa-spin"></i> Banned word mila... Regenerating (attempt ${regenerateAttempt})...</span>`;
+                try {
+                    const regenSysPrompt = buildSystemPrompt(currentChatMessages[currentChatMessages.length - 1]?.content || "", intent);
+
+                    if (isGemini) {
+                        let regenContents = [];
+                        currentChatMessages.slice(-8).forEach(msg => {
+                            let mapRole = msg.role === 'assistant' ? 'model' : 'user';
+                            if (regenContents.length > 0 && regenContents[regenContents.length-1].role === mapRole) {
+                                regenContents[regenContents.length-1].parts[0].text += "\n" + msg.content;
+                            } else {
+                                regenContents.push({ role: mapRole, parts: [{ text: msg.content }] });
+                            }
+                        });
+                        let regenRes;
+                        let regenAttempts = 0;
+                        const maxRegenAttempts = Math.max(1, myGeminiKeysList.length || 1);
+                        while(true){
+                            regenAttempts++;
+                            regenRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${runModel}:generateContent?key=${myGeminiApiKey}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ systemInstruction: { parts: [{ text: regenSysPrompt }] }, contents: regenContents, generationConfig: { temperature: 0.5 } })
+                            });
+                            if(regenRes.ok) break;
+                            let errTxt2 = "";
+                            try { const ed = await regenRes.clone().json(); errTxt2 = ed.error?.message || ""; } catch(_){}
+                            const isQuota2 = (regenRes.status===429) || window.isGeminiQuotaError(errTxt2);
+                            if(isQuota2 && myGeminiKeysList.length>1 && regenAttempts<maxRegenAttempts){
+                                const r2 = await window.rotateGeminiKey();
+                                if(r2) continue;
+                            }
+                            break;
+                        }
+                        if (regenRes.ok) {
+                            const regenData = await regenRes.json();
+                            const regenText = regenData.candidates?.[0]?.content?.parts?.[0]?.text;
+                            if (regenText) { fullText = regenText; }
+                        }
+                    } else {
+                        const regenMessages = [{ role: "system", content: regenSysPrompt }];
+                        currentChatMessages.slice(-8).forEach(msg => {
+                            if(msg.role === 'user' || msg.role === 'assistant') regenMessages.push({ role: msg.role, content: msg.content });
+                        });
+                        const regenRes = await fetch(`https://api.sarvam.ai/v1/chat/completions`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'api-subscription-key': globalSarvamKeyStore },
+                            body: JSON.stringify({ model: runModel, messages: regenMessages, temperature: 0.5 })
+                        });
+                        if(regenRes.ok) {
+                            const regenData = await regenRes.json();
+                            if(regenData.choices && regenData.choices[0].message) {
+                                fullText = regenData.choices[0].message.content || fullText;
+                            }
+                        }
+                    }
+                } catch(regenErr) { break; }
+            }
+
+            if(hasBannedWord(fullText, bannedWords)) {
+                textContainer.insertAdjacentHTML('afterbegin', `<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:12px;color:#b91c1c;"><i class="fa-solid fa-triangle-exclamation"></i> Warning: Response mein banned word ho sakta hai. Admin se contact karein.</div>`);
+            }
+
+            textContainer.innerHTML = parseAIOutputToUI(fullText, bubbleId);
+
+            currentChatMessages.push({ role: 'assistant', content: fullText, timestamp: Date.now() });
+            saveMsgToFirebase('assistant', fullText);
+            window.msgCache[bubbleId] = fullText;
+
+            document.getElementById(`action-${bubbleId}`).innerHTML = `
+                <div class="action-bar" style="margin-left: 44px;">
+                    <button class="action-btn" onclick="generateAndShowAudio('${bubbleId}')"><i class="fa-solid fa-microphone"></i> Voice Note (Full)</button>
+                    <button class="action-btn" onclick="shareToWA('${bubbleId}')"><i class="fa-brands fa-whatsapp"></i> Text WA (Full)</button>
+                </div>`;
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            if(myDeviceAudio === "on") {
+                let cleanPlayText = "";
+                // Check: koi SCRIPT tag hai ya nahi (case-insensitive)
+                const hasScriptTag = /\[\[SCRIPT\]\]/i.test(fullText);
+                if (hasScriptTag) {
+                    // Lead response: ONLY intro paragraph (SCRIPT se pehle ka text)
+                    const scriptSplit = fullText.split(/\[\[SCRIPT\]\]/i);
+                    let introText = scriptSplit[0] || "";
+                    // MISTAKE block hata do
+                    introText = introText.replace(/\[\[MISTAKE\]\][\s\S]*?\[\[\/MISTAKE\]\]/gi, '');
+                    // Baaki koi bhi tag hata do
+                    introText = introText.replace(/\[\[[\s\S]*?\]\]/g, '');
+                    cleanPlayText = introText
+                        .replace(/[*_#`~]/g, '')
+                        .replace(/\n+/g, ' ')
+                        .replace(/\s+/g, ' ')
+                        .trim();
+                } else {
+                    // General / advice: pura text padho
+                    cleanPlayText = fullText
+                        .replace(/\[\[[\s\S]*?\]\]/g, '')
+                        .replace(/[*_#`~]/g, '')
+                        .replace(/\n+/g, ' ')
+                        .replace(/\s+/g, ' ')
+                        .trim();
+                }
+                if (cleanPlayText) playDeviceAudio(cleanPlayText);
+            }
+
+            setTimeout(() => extractMemoryWithAI(), 1000);
+
+        } catch(errMsg) {
+            document.getElementById(`text-${bubbleId}`).innerHTML = `<span style="color:#ef4444;">${errMsg.message}</span>`;
+            currentChatMessages.pop();
+        } finally {
+            document.getElementById('sendBtn').disabled = false;
+        }
+    }
+
+    let isRecording = false;
+
+    window.toggleVoiceTyping = function() {
+        const micBtn = document.getElementById('micBtn');
+        const aiInput = document.getElementById('aiInput');
+
+        if (isRecording) {
+            if (window._activeRecognition) window._activeRecognition.stop();
+            return;
+        }
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            showToast("Aapka browser voice typing support nahi karta. Chrome use karein.", true);
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'hi-IN';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+        window._activeRecognition = recognition;
+
+        recognition.onstart = () => {
+            isRecording = true;
+            micBtn.classList.add('recording');
+            aiInput.placeholder = "Sun raha hoon... (Tap mic to stop)";
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            const cur = aiInput.value.trim();
+            aiInput.value = cur ? cur + ' ' + transcript : transcript;
+            aiInput.focus();
+        };
+
+        recognition.onerror = (event) => {
+            isRecording = false;
+            micBtn.classList.remove('recording');
+            aiInput.placeholder = "Lead ki situation describe karo...";
+            if (event.error === 'not-allowed') {
+                showToast("Mic blocked hai! Browser address bar mein lock icon > Allow karein.", true);
+            } else if (event.error === 'no-speech') {
+                showToast("Koi awaaz nahi aayi. Dobara try karein.", true);
+            } else if (event.error === 'network') {
+                showToast("Network issue — thodi der baad try karein.", true);
+            } else {
+                showToast("Voice error: " + event.error, true);
+            }
+        };
+
+        recognition.onend = () => {
+            isRecording = false;
+            micBtn.classList.remove('recording');
+            aiInput.placeholder = "Lead ki situation describe karo...";
+        };
+
+        try {
+            recognition.start();
+        } catch(err) {
+            isRecording = false;
+            micBtn.classList.remove('recording');
+            showToast("Mic shuru nahi hua: " + err.message, true);
+        }
+    }
+
+    window.copySpecificScript = function(cacheId) {
+        const text = window.scriptCache[cacheId];
+        if(!text) return;
+        navigator.clipboard.writeText(text).then(() => showToast('Script Copied! ✅'));
+    }
+
+    window.waSpecificScript = function(cacheId) {
+        const text = window.scriptCache[cacheId];
+        if(!text) return;
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    window.savePersonalRules = async () => {
+        let rules = document.getElementById('personalRulesInput').value.trim();
+        loader.classList.add('active');
+        try {
+            await update(ref(db, `phoneUsers/${userPhone}`), { personalRules: rules });
+            myPersonalRules = rules;
+            showToast('Personal rules saved ✅');
+        } catch (e) { showToast('Save failed ❌', true); }
+        finally { loader.classList.remove('active'); }
+    }
+
+    window.saveUserPreferences = async () => {
+        const model = document.getElementById('userModelSelect').value;
+        const voice = document.getElementById('userVoiceSelect').value;
+        const dAudio = document.getElementById('userDeviceAudio').value;
+        myDeviceAudio = dAudio;
+        if (userPhone) {
+            try {
+                await update(ref(db, `phoneUsers/${userPhone}`), { activeModel: model, sarvamVoice: voice, deviceAudio: dAudio });
+                showToast('Preferences saved ✅');
+            } catch(e) {}
+        }
+        if(dAudio === "on" && window.speechSynthesis) {
+            let u = new SpeechSynthesisUtterance('');
+            window.speechSynthesis.speak(u);
+        }
+    }
+
+    window.savePersonalSarvamKey = async () => {
+        let key = document.getElementById('sarvamKeyInput').value.trim();
+        if(!key) return showToast('Key required ❌', true);
+        loader.classList.add('active');
+        try {
+            await update(ref(db, `phoneUsers/${userPhone}`), { sarvamApiKey: key });
+            mySarvamApiKey = key;
+            showToast('Sarvam key saved ✅');
+        } catch (e) { showToast('Save failed ❌', true); }
+        finally { loader.classList.remove('active'); }
+    }
+
+    // ===== MULTI-KEY GEMINI MANAGEMENT =====
+    function maskKey(k){ if(!k) return ""; if(k.length<=8) return k; return k.substring(0,6)+"..."+k.substring(k.length-4); }
+
+    function renderGeminiKeysList(){
+        const box = document.getElementById('geminiKeysList');
+        if(!box) return;
+        if(!myGeminiKeysList.length){
+            box.innerHTML = `<div style="font-size:12px;color:var(--text-muted);padding:6px 4px;">No keys added yet. Add karein upar.</div>`;
+            return;
+        }
+        box.innerHTML = myGeminiKeysList.map((k,i)=>{
+            const isActive = i === myGeminiActiveIndex;
+            const exhausted = myGeminiExhaustedKeys[k];
+            return `<div style="display:flex;align-items:center;justify-content:space-between;background:${isActive?'rgba(245,158,11,0.12)':'rgba(255,255,255,0.04)'};border:1px solid ${isActive?'#f59e0b':'var(--border)'};border-radius:8px;padding:8px 10px;font-size:13px;">
+                <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
+                    <i class="fa-solid ${isActive?'fa-circle-check':'fa-key'}" style="color:${isActive?'#10a37f':'#94a3b8'};"></i>
+                    <span style="font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Key ${i+1}: ${maskKey(k)}</span>
+                    ${isActive?'<span style="font-size:10px;background:#10a37f;color:#fff;padding:2px 6px;border-radius:4px;">ACTIVE</span>':''}
+                    ${exhausted?'<span style="font-size:10px;background:#ef4444;color:#fff;padding:2px 6px;border-radius:4px;">QUOTA OVER</span>':''}
+                </div>
+                <div style="display:flex;gap:6px;">
+                    ${!isActive?`<button onclick="setActiveGeminiKey(${i})" style="background:#f59e0b;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;">Use</button>`:''}
+                    <button onclick="removeGeminiKey(${i})" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    window.addPersonalGeminiKey = async () => {
+        let key = document.getElementById('geminiKeyInput').value.trim();
+        if(!key) return showToast('Gemini Key required ❌', true);
+        if(myGeminiKeysList.includes(key)) { showToast('Key already added ⚠️', true); return; }
+        loader.classList.add('active');
+        try {
+            myGeminiKeysList.push(key);
+            if(myGeminiKeysList.length === 1) myGeminiActiveIndex = 0;
+            myGeminiApiKey = myGeminiKeysList[myGeminiActiveIndex] || key;
+            await update(ref(db, `phoneUsers/${userPhone}`), { geminiApiKeys: myGeminiKeysList, geminiActiveIndex: myGeminiActiveIndex, geminiApiKey: myGeminiApiKey });
+            document.getElementById('geminiKeyInput').value = "";
+            renderGeminiKeysList();
+            showToast('Gemini key added ✅ (Total: '+myGeminiKeysList.length+')');
+        } catch (e) { showToast('Save failed ❌', true); }
+        finally { loader.classList.remove('active'); }
+    }
+
+    window.setActiveGeminiKey = async (idx) => {
+        if(idx<0 || idx>=myGeminiKeysList.length) return;
+        myGeminiActiveIndex = idx;
+        myGeminiApiKey = myGeminiKeysList[idx];
+        try { await update(ref(db, `phoneUsers/${userPhone}`), { geminiActiveIndex: idx, geminiApiKey: myGeminiApiKey }); } catch(e){}
+        renderGeminiKeysList();
+        showToast('Switched to Key '+(idx+1)+' ✅');
+    }
+
+    window.removeGeminiKey = async (idx) => {
+        if(idx<0 || idx>=myGeminiKeysList.length) return;
+        const removed = myGeminiKeysList.splice(idx,1)[0];
+        delete myGeminiExhaustedKeys[removed];
+        if(myGeminiActiveIndex >= myGeminiKeysList.length) myGeminiActiveIndex = 0;
+        myGeminiApiKey = myGeminiKeysList[myGeminiActiveIndex] || "";
+        try { await update(ref(db, `phoneUsers/${userPhone}`), { geminiApiKeys: myGeminiKeysList, geminiActiveIndex: myGeminiActiveIndex, geminiApiKey: myGeminiApiKey }); } catch(e){}
+        renderGeminiKeysList();
+        showToast('Key removed 🗑️');
+    }
+
+    // Detect quota / rate-limit errors from Gemini
+    window.isGeminiQuotaError = function(errMsgOrStatus){
+        if(typeof errMsgOrStatus === 'number') return errMsgOrStatus === 429;
+        const s = String(errMsgOrStatus||'').toLowerCase();
+        return s.includes('quota') || s.includes('rate limit') || s.includes('exceeded') || s.includes('resource_exhausted') || s.includes('429') || s.includes('rate_limit');
+    }
+
+    // Rotate to next available (non-exhausted) Gemini key. Returns true on success, false if all keys exhausted.
+    window.rotateGeminiKey = async function(){
+        if(!myGeminiKeysList.length) return false;
+        // mark current key as exhausted
+        const curr = myGeminiKeysList[myGeminiActiveIndex];
+        if(curr) myGeminiExhaustedKeys[curr] = true;
+        // find next non-exhausted key
+        const total = myGeminiKeysList.length;
+        for(let step=1; step<=total; step++){
+            const nextIdx = (myGeminiActiveIndex + step) % total;
+            const candidate = myGeminiKeysList[nextIdx];
+            if(candidate && !myGeminiExhaustedKeys[candidate]){
+                myGeminiActiveIndex = nextIdx;
+                myGeminiApiKey = candidate;
+                try { await update(ref(db, `phoneUsers/${userPhone}`), { geminiActiveIndex: nextIdx, geminiApiKey: candidate }); } catch(e){}
+                renderGeminiKeysList();
+                console.log('[Auto-Rotate] Switched to Gemini Key #'+(nextIdx+1));
+                return true;
+            }
+        }
+        return false; // all exhausted
+    }
+
+    // Backward-compat alias (in case anything still calls the old name)
+    window.savePersonalGeminiKey = window.addPersonalGeminiKey;
+
+    function base64ToBlob(base64Str, mimeType = 'audio/wav') {
+        const b64Data = base64Str.split(',')[1] || base64Str;
+        const byteCharacters = atob(b64Data);
+        const byteArrays = [];
+        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+            const slice = byteCharacters.slice(offset, offset + 512);
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) { byteNumbers[i] = slice.charCodeAt(i); }
+            byteArrays.push(new Uint8Array(byteNumbers));
+        }
+        return new Blob(byteArrays, { type: mimeType });
+    }
+
+    // Cache: same text dobara translate nahi hoga — instant replay
+    window._hindiTransCache = {};
+
+    async function translateHinglishToHindi(text) {
+        let cleanText = text.replace(/\[\[\/?OPTION[12]\]\]/g, '').trim();
+
+        // Cache check — pehle se translate hua? Instantly return karo
+        if (window._hindiTransCache[cleanText]) return window._hindiTransCache[cleanText];
+
+        const instruction = "Convert this Hinglish/English sales script to pure Devanagari Hindi only. Keep it natural spoken style. Output ONLY the Hindi dialogue, nothing else.";
+
+        // ✅ Fast path: Gemini Flash se translate karo (same key, no extra service needed)
+        if (myGeminiApiKey) {
+            try {
+                let resp;
+                let trAttempts = 0;
+                const maxTr = Math.max(1, myGeminiKeysList.length || 1);
+                while(true){
+                    trAttempts++;
+                    resp = await fetch(
+                        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${myGeminiApiKey}`,
+                        {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{ parts: [{ text: instruction + "\n\nText: \"" + cleanText + "\"" }] }],
+                                generationConfig: { temperature: 0.1, maxOutputTokens: 600 }
+                            })
+                        }
+                    );
+                    if(resp.ok) break;
+                    let errTxt3 = "";
+                    try { const ed = await resp.clone().json(); errTxt3 = ed.error?.message || ""; } catch(_){}
+                    const isQuota3 = (resp.status===429) || window.isGeminiQuotaError(errTxt3);
+                    if(isQuota3 && myGeminiKeysList.length>1 && trAttempts<maxTr){
+                        const r3 = await window.rotateGeminiKey();
+                        if(r3) continue;
+                    }
+                    break;
+                }
+                if (resp && resp.ok) {
+                    const data = await resp.json();
+                    const result = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+                    if (result) {
+                        window._hindiTransCache[cleanText] = result;
+                        return result;
+                    }
+                }
+            } catch(e) {}
+        }
+
+        // Fallback: Sarvam translation (agar Gemini key nahi hai)
+        if (globalSarvamKeyStore) {
+            try {
+                const response = await fetch(`https://api.sarvam.ai/v1/chat/completions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'api-subscription-key': globalSarvamKeyStore },
+                    body: JSON.stringify({ model: "sarvam-105b", messages: [{ role: "system", content: instruction }, { role: "user", content: `Text: "${cleanText}"` }], temperature: 0.1 })
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const result = data?.choices?.[0]?.message?.content?.trim();
+                    if (result) {
+                        window._hindiTransCache[cleanText] = result;
+                        return result;
+                    }
+                }
+            } catch(e) {}
+        }
+
+        return cleanText; // Last resort: original text as-is
+    }
+
+    // Helper: PCM16 base64 → WAV Blob (for Gemini TTS output)
+    function pcm16Base64ToWavBlob(base64Str, sampleRate = 24000) {
+        const binaryStr = atob(base64Str);
+        const pcmBytes = new Uint8Array(binaryStr.length);
+        for (let i = 0; i < binaryStr.length; i++) pcmBytes[i] = binaryStr.charCodeAt(i);
+        const numChannels = 1, bitsPerSample = 16;
+        const byteRate = sampleRate * numChannels * (bitsPerSample / 8);
+        const blockAlign = numChannels * (bitsPerSample / 8);
+        const wavBuffer = new ArrayBuffer(44 + pcmBytes.length);
+        const view = new DataView(wavBuffer);
+        const writeStr = (o, s) => { for (let i = 0; i < s.length; i++) view.setUint8(o + i, s.charCodeAt(i)); };
+        writeStr(0, 'RIFF');
+        view.setUint32(4, 36 + pcmBytes.length, true);
+        writeStr(8, 'WAVE');
+        writeStr(12, 'fmt ');
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true);
+        view.setUint16(22, numChannels, true);
+        view.setUint32(24, sampleRate, true);
+        view.setUint32(28, byteRate, true);
+        view.setUint16(32, blockAlign, true);
+        view.setUint16(34, bitsPerSample, true);
+        writeStr(36, 'data');
+        view.setUint32(40, pcmBytes.length, true);
+        new Uint8Array(wavBuffer, 44).set(pcmBytes);
+        return new Blob([wavBuffer], { type: 'audio/wav' });
+    }
+
+    window.playDeviceAudio = async (text) => {
+        try {
+            if (window.currentAutoAudioPlayer) { window.currentAutoAudioPlayer.pause(); window.currentAutoAudioPlayer = null; }
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+
+            // Safety: agar koi SCRIPT tag aa gaya to sirf pehle ka text lo
+            let processedText = text;
+            if (/\[\[SCRIPT\]\]/i.test(processedText)) {
+                processedText = processedText.split(/\[\[SCRIPT\]\]/i)[0];
+            }
+            processedText = processedText.replace(/\[\[[\s\S]*?\]\]/g, '');
+
+            let safeText = processedText
+                .replace(/[*_#`~]/g, '')
+                .replace(/\n+/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .substring(0, 600);
+            if (!safeText) return;
+
+            // Gemini TTS — direct, no translation (with auto-rotate on quota)
+            if (myGeminiApiKey) {
+                let resp;
+                let ttsAttempts = 0;
+                const maxTts = Math.max(1, myGeminiKeysList.length || 1);
+                const ttsBody = JSON.stringify({
+                    contents: [{ parts: [{ text: safeText }] }],
+                    generationConfig: {
+                        responseModalities: ["AUDIO"],
+                        speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Kore" } } }
+                    }
+                });
+                while(true){
+                    ttsAttempts++;
+                    resp = await fetch(
+                        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${myGeminiApiKey}`,
+                        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: ttsBody }
+                    );
+                    if(resp.ok) break;
+                    let errTxt4 = "";
+                    try { const ed = await resp.clone().json(); errTxt4 = ed.error?.message || ""; } catch(_){}
+                    const isQuota4 = (resp.status===429) || window.isGeminiQuotaError(errTxt4);
+                    if(isQuota4 && myGeminiKeysList.length>1 && ttsAttempts<maxTts){
+                        const r4 = await window.rotateGeminiKey();
+                        if(r4) continue;
+                    }
+                    break;
+                }
+                if (resp && resp.ok) {
+                    const data = await resp.json();
+                    const audioPart = data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData?.mimeType?.startsWith('audio'));
+                    if (audioPart?.inlineData?.data) {
+                        const wavBlob = pcm16Base64ToWavBlob(audioPart.inlineData.data, 24000);
+                        const url = URL.createObjectURL(wavBlob);
+                        window.currentAutoAudioPlayer = new Audio(url);
+                        window.currentAutoAudioPlayer.onended = () => { window.novaEngine?.restartAfterTTS?.(); };
+                        window.currentAutoAudioPlayer.play();
+                        return;
+                    }
+                }
+            }
+
+            // Fallback: browser SpeechSynthesis (agar Gemini key nahi)
+            if (!('speechSynthesis' in window)) return;
+            let msg = new SpeechSynthesisUtterance(safeText);
+            msg.lang = 'hi-IN'; msg.rate = 1.0; msg.pitch = 1.0;
+            let voices = window.speechSynthesis.getVoices();
+            let hiVoice = voices.find(v => v.lang.includes('hi') || v.lang.includes('HI'));
+            if (hiVoice) msg.voice = hiVoice;
+            msg.onend = () => { window.novaEngine?.restartAfterTTS?.(); };
+            window.speechSynthesis.speak(msg);
+        } catch(e) { console.warn('TTS error:', e); }
+    }
+
+    window.generateAndShowAudio = async (bubbleId) => {
+        const actionDiv = document.getElementById(`action-${bubbleId}`);
+        let rawHinglishText = window.msgCache[bubbleId] || "";
+        const hinglishText = rawHinglishText.replace(/\[\[\/?SCRIPT\]\]/g, '');
+        const selectedVoice = document.getElementById('userVoiceSelect').value || "aditya";
+        if (!mySarvamApiKey) {
+            if(actionDiv) actionDiv.innerHTML = `<div style="font-size:13px;color:var(--danger);background:rgba(239,68,68,0.1);padding:10px;border-radius:8px;margin-top:8px; margin-left: 44px;"><b>Voice Error:</b> Settings mein ja kar apni <b>Personal Sarvam API Key</b> daalein.</div>`;
+            return;
+        }
+        if(actionDiv) actionDiv.innerHTML = `<div style="font-size:12px;color:var(--text-muted);margin-top:8px; margin-left: 44px;"><i class="fa-solid fa-circle-notch fa-spin"></i> Generating Voice...</div>`;
+        try {
+            const hindiTranslation = await translateHinglishToHindi(hinglishText);
+            let safeText = hindiTranslation.replace(/[*_#`~\[\]"':;-]/g, ' ').replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim().substring(0, 480);
+            if(!safeText) throw new Error("Text extract nahi ho paya.");
+            const response = await fetch('https://api.sarvam.ai/text-to-speech', {
+                method: 'POST',
+                headers: { 'api-subscription-key': mySarvamApiKey, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ "inputs": [safeText], "target_language_code": "hi-IN", "speaker": selectedVoice, "pitch": 0, "pace": 1.05, "loudness": 1.5, "speech_sample_rate": 24000, "enable_preprocessing": true, "model": "bulbul:v2" })
+            });
+            if (!response.ok) {
+                if(response.status === 401 || response.status === 403) throw new Error("Aapki Sarvam Key galat hai ya expire ho gayi hai.");
+                throw new Error(`Sarvam TTS API Error.`);
+            }
+            const data = await response.json();
+            if (data && data.audios && data.audios.length > 0) {
+                window.audioBlobCache[bubbleId] = base64ToBlob(data.audios[0], 'audio/wav');
+            } else throw new Error("No audio returned");
+            const safeHtml = safeText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            if(actionDiv) actionDiv.innerHTML = `
+                <div class="hindi-trans-block">
+                    <div style="font-size:13px;color:var(--text-primary);margin-bottom:10px;">${safeHtml}</div>
+                    <div class="action-bar" style="margin-left: 0;">
+                        <button class="action-btn" onclick="playAudio('${bubbleId}')"><i class="fa-solid fa-play"></i> Play</button>
+                        <button class="action-btn" onclick="shareAudioDirectly('${bubbleId}')"><i class="fa-solid fa-share"></i> Share WA</button>
+                    </div>
+                </div>`;
+        } catch (err) {
+            if(actionDiv) actionDiv.innerHTML = `<div style="font-size:12px;color:var(--danger);margin-top:10px; margin-left: 44px;">Error: ${err.message}</div>`;
+        }
+    }
+
+    window.playAudio = (bubbleId) => {
+        const blob = window.audioBlobCache[bubbleId];
+        if(!blob) return;
+        const url = URL.createObjectURL(blob);
+        if (window.currentAudioPlayer) window.currentAudioPlayer.pause();
+        window.currentAudioPlayer = new Audio(url);
+        window.currentAudioPlayer.play();
+    }
+
+    window.shareAudioDirectly = async (bubbleId) => {
+        const blob = window.audioBlobCache[bubbleId];
+        if(!blob) return;
+        try {
+            const file = new File([blob], "Mentor_VoiceNote.wav", { type: blob.type || "audio/wav" });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({ files: [file] });
+            } else {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = "Mentor_VoiceNote.wav";
+                a.click();
+            }
+        } catch (error) {}
+    }
+
+    window.shareToWA = (bubbleId) => {
+        let text = window.msgCache[bubbleId];
+        if(!text) return;
+        text = text.replace(/\[\[\/?SCRIPT\]\]/g, '');
+        const cleanStr = text.replace(/[*#_`~\[\]]/g, '').trim();
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(cleanStr)}`, '_blank');
+    }
+
+    window.generateOptionAudio = async (bubbleId, optionKey, btnEl) => {
+        const voiceDiv = document.getElementById(`opt-voice-${optionKey}`);
+        const rawText = window.scriptCache[optionKey];
+        if (!rawText || !voiceDiv) return;
+
+        if (!mySarvamApiKey) {
+            voiceDiv.innerHTML = `<div style="font-size:12px;color:var(--danger);padding:8px 0;">⚠️ Settings mein apni <b>Personal Sarvam API Key</b> daalein voice ke liye.</div>`;
+            return;
+        }
+
+        if (btnEl) { btnEl.disabled = true; btnEl.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i>`; }
+        voiceDiv.innerHTML = `<div style="font-size:12px;color:var(--text-muted);padding:6px 0;"><i class="fa-solid fa-language fa-spin"></i> Hindi mein translate ho raha hai...</div>`;
+
+        try {
+            const hindiText = await translateHinglishToHindi(rawText);
+            let safeText = hindiText
+                .replace(/[*_#\`~\[\]"':;]/g, ' ')
+                .replace(/\n+/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .substring(0, 480);
+            if (!safeText) throw new Error("Text extract nahi ho paya.");
+
+            voiceDiv.innerHTML = `<div style="font-size:12px;color:var(--text-muted);padding:6px 0;"><i class="fa-solid fa-waveform-lines fa-spin"></i> Voice generate ho rahi hai...</div>`;
+
+            const selectedVoice = document.getElementById('userVoiceSelect').value || "aditya";
+            const response = await fetch('https://api.sarvam.ai/text-to-speech', {
+                method: 'POST',
+                headers: { 'api-subscription-key': mySarvamApiKey, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    "inputs": [safeText],
+                    "target_language_code": "hi-IN",
+                    "speaker": selectedVoice,
+                    "pitch": 0, "pace": 1.05, "loudness": 1.5,
+                    "speech_sample_rate": 24000,
+                    "enable_preprocessing": true,
+                    "model": "bulbul:v2"
+                })
+            });
+
+            if (!response.ok) {
+                if (response.status === 401 || response.status === 403) throw new Error("Sarvam Key galat ya expire ho gayi.");
+                throw new Error("TTS API Error " + response.status);
+            }
+
+            const data = await response.json();
+            if (!data.audios || !data.audios.length) throw new Error("Audio generate nahi hua.");
+
+            window.audioBlobCache[optionKey] = base64ToBlob(data.audios[0], 'audio/wav');
+
+            const safeHtml = safeText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            voiceDiv.innerHTML = `
+                <div class="hindi-trans-block">
+                    <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;line-height:1.5;">${safeHtml}</div>
+                    <div class="action-bar" style="margin-left:0;">
+                        <button class="action-btn" onclick="playOptionAudio('${optionKey}')"><i class="fa-solid fa-play"></i> Play</button>
+                        <button class="action-btn" onclick="shareOptionAudio('${optionKey}')"><i class="fa-solid fa-share"></i> Share WA</button>
+                    </div>
+                </div>`;
+
+            if (btnEl) { btnEl.innerHTML = `<i class="fa-solid fa-check"></i> Done`; btnEl.style.opacity = '0.6'; }
+        } catch (err) {
+            voiceDiv.innerHTML = `<div style="font-size:12px;color:var(--danger);padding:6px 0;">❌ Error: ${err.message}</div>`;
+            if (btnEl) { btnEl.disabled = false; btnEl.innerHTML = `<i class="fa-solid fa-microphone"></i> Voice`; }
+        }
+    }
+
+    window.playOptionAudio = (optionKey) => {
+        const blob = window.audioBlobCache[optionKey];
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        if (window.currentAudioPlayer) window.currentAudioPlayer.pause();
+        window.currentAudioPlayer = new Audio(url);
+        window.currentAudioPlayer.play();
+    }
+
+    window.shareOptionAudio = async (optionKey) => {
+        const blob = window.audioBlobCache[optionKey];
+        if (!blob) return;
+        try {
+            const file = new File([blob], "Mentor_VoiceNote.wav", { type: blob.type || "audio/wav" });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({ files: [file] });
+            } else {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = "Mentor_VoiceNote.wav";
+                a.click();
+            }
+        } catch (e) { console.error("Share error:", e); }
+    }
+    // ======= SELF-TEST (Mock Exam) =======
+    let stTestConfig = { enabled: true, chunksPerTest: 15, questionsPerTest: 10, minChunksRequired: 5 };
+    let stCurrent = null; // { testId, questions, answers:[], qIndex, totalQ }
+
+    function stConf() {
+        if (adminSettings.testConfig) stTestConfig = Object.assign(stTestConfig, adminSettings.testConfig);
+    }
+
+    // Shared AI call helper — SAME primitives/keys/auto-rotate as chat pipeline (chat code untouched)
+    async function callAIForJSON(systemPrompt, userPrompt) {
+        const runModel = document.getElementById('userModelSelect').value || 'sarvam-105b';
+        const isGemini = runModel.includes('gemini') || runModel.includes('gemma');
+        let raw = "";
+
+        if (isGemini) {
+            if (!myGeminiApiKey && myGeminiKeysList.length === 0) throw new Error("Gemini Models ke liye pehle Settings mein apni Personal Gemini API Key daalein.");
+            let resp;
+            let attempts = 0;
+            const maxAttempts = Math.max(1, myGeminiKeysList.length || 1);
+            while (true) {
+                attempts++;
+                resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${runModel}:generateContent?key=${myGeminiApiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ systemInstruction: { parts: [{ text: systemPrompt }] }, contents: [{ role: 'user', parts: [{ text: userPrompt }] }], generationConfig: { temperature: 0.3 } })
+                });
+                if (resp.ok) break;
+                let errTxt = "";
+                try { const ed = await resp.clone().json(); errTxt = ed.error?.message || ""; } catch(_){}
+                const isQuota = (resp.status === 429) || window.isGeminiQuotaError(errTxt);
+                if (isQuota && myGeminiKeysList.length > 1 && attempts < maxAttempts) {
+                    const rotated = await window.rotateGeminiKey();
+                    if (rotated) continue;
+                }
+                throw new Error("Gemini API Error: " + (errTxt || "Invalid Key or Model"));
+            }
+            const data = await resp.json();
+            raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        } else {
+            const keyToUse = globalSarvamKeyStore || mySarvamApiKey;
+            if (!keyToUse) throw new Error("Admin ne abhi AI key configure nahi ki hai.");
+            const resp = await fetch('https://api.sarvam.ai/v1/chat/completions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'api-subscription-key': keyToUse },
+                body: JSON.stringify({ model: runModel, messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userPrompt }], temperature: 0.3 })
+            });
+            if (!resp.ok) throw new Error("AI server busy hai ya key expired — thodi der baad try karein.");
+            const data = await resp.json();
+            raw = data?.choices?.[0]?.message?.content || "";
+        }
+        if (!raw) throw new Error("AI se koi response nahi aaya.");
+
+        const jsonBlock = extractJsonBlock(raw);
+        if (!jsonBlock) throw new Error("AI ne sahi JSON format mein response nahi diya.");
+        try {
+            return JSON.parse(jsonBlock);
+        } catch (parseErr) {
+            throw new Error("AI response JSON parse nahi ho paya, dobara try karein.");
+        }
+    }
+
+    function extractJsonBlock(raw) {
+        const text = raw.trim();
+        const firstArr = text.indexOf('[');
+        const firstObj = text.indexOf('{');
+        let start = -1, endChar = '';
+        if (firstArr === -1 && firstObj === -1) return null;
+        if (firstArr !== -1 && (firstObj === -1 || firstArr < firstObj)) {
+            start = firstArr; endChar = ']';
+        } else {
+            start = firstObj; endChar = '}';
+        }
+        const end = text.lastIndexOf(endChar);
+        if (end === -1 || end < start) return null;
+        return text.substring(start, end + 1);
+    }
+
+    async function callAIForJSONWithRetry(systemPrompt, userPrompt) {
+        try { return await callAIForJSON(systemPrompt, userPrompt); }
+        catch (e) { return await callAIForJSON(systemPrompt, userPrompt); }
+    }
+
+    function sampleKbChunks(count) {
+        const keys = Object.keys(kbModules || {});
+        const shuffled = [...keys].sort(() => Math.random() - 0.5);
+        return shuffled.slice(0, count);
+    }
+
+    window.openSelfTest = async function() {
+        stConf();
+        document.getElementById('selfTestOverlay').classList.add('active');
+        await renderStHome();
+    };
+
+    window.closeSelfTest = function() {
+        document.getElementById('selfTestOverlay').classList.remove('active');
+        stCurrent = null;
+    };
+
+    async function renderStHome() {
+        const home = document.getElementById('stHome');
+        document.getElementById('stQuestionView').style.display = 'none';
+        document.getElementById('stResultView').style.display = 'none';
+        home.style.display = 'block';
+        document.getElementById('selfTestTitle').textContent = '🎯 Self-Test';
+
+        if (!stTestConfig.enabled) {
+            home.innerHTML = `<div style="padding:20px;"><div class="st-disabled-box"><i class="fa-solid fa-circle-info"></i> Self-Test feature abhi admin ne <b>disable</b> kar diya hai. Jald hi wapas aa sakta hai!</div></div>`;
+            return;
+        }
+        const allKeys = Object.keys(kbModules || {});
+        if (allKeys.length < (stTestConfig.minChunksRequired || 5)) {
+            home.innerHTML = `<div style="padding:20px;"><div class="st-disabled-box"><i class="fa-solid fa-database"></i> Admin ne abhi kaafi training data (Knowledge Base chunks) add nahi kiya hai. Thodi der baad try karo!</div></div>`;
+            return;
+        }
+
+        let resumeHtml = '';
+        let activeTestId = null;
+        try {
+            const uSnap = await get(ref(db, `phoneUsers/${userPhone}`));
+            activeTestId = (uSnap.exists() && uSnap.val().activeTestId) || null;
+            if (activeTestId) {
+                const tSnap = await get(ref(db, `userTests/${userPhone}/${activeTestId}`));
+                if (tSnap.exists()) {
+                    const rec = tSnap.val();
+                    if (rec.status === 'in_progress') {
+                        const answered = Array.isArray(rec.answers) ? rec.answers.length : 0;
+                        const total = Array.isArray(rec.questions) ? rec.questions.length : 0;
+                        resumeHtml = `
+                        <div class="st-card" style="border-color:rgba(16,163,127,0.4);">
+                            <div class="st-title"><i class="fa-solid fa-clock-rotate-left" style="color:#10a37f;"></i> In-Progress Test Mila!</div>
+                            <div class="st-sub">Tumne pehle ek test shuru kiya tha — <b>${answered}/${total}</b> questions answer ho chuke hain. Wahi se continue karo, ya discard karke naya test do.</div>
+                            <button class="st-primary-btn" style="margin-bottom:10px;" onclick="resumeSelfTest('${activeTestId}')"><i class="fa-solid fa-play"></i> Resume Test (Q${answered + 1}/${total} baaki)</button>
+                            <button class="st-ghost-btn" onclick="discardSelfTest('${activeTestId}')"><i class="fa-solid fa-trash"></i> Discard & Start New</button>
+                        </div>`;
+                    }
+                } else {
+                    try { await update(ref(db, `phoneUsers/${userPhone}`), { activeTestId: null }); } catch(_){}
+                }
+            }
+        } catch(e) { console.error(e); }
+
+        home.innerHTML = `
+            <div style="padding:20px;">
+                <div class="st-card">
+                    <div class="st-title"><i class="fa-solid fa-bullseye" style="color:#10a37f;"></i> Lead-Objection Mock Exam</div>
+                    <div class="st-sub">Ek real lead jaise sawaal uthayega — tumhe answer likhna hai. AI tumhe <b>100 mein se score</b> dega, feedback dega, aur bataayega kaha weak ho. Jitni baar chaaho practice karo — koi limit nahi!</div>
+                    <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--text-muted);margin-bottom:14px;">
+                        <span><i class="fa-solid fa-layer-group" style="color:#818cf8;"></i> ${allKeys.length} training chunks available · ${stTestConfig.chunksPerTest || 15} sample honge</span>
+                        <span><i class="fa-solid fa-list-ol" style="color:#f59e0b;"></i> Max ${stTestConfig.questionsPerTest || 10} questions per test</span>
+                    </div>
+                    ${resumeHtml}
+                    <button class="st-primary-btn" onclick="startNewSelfTest()"><i class="fa-solid fa-pen-to-square"></i> Naya Test Start Karo</button>
+                </div>
+                <div class="st-card">
+                    <div class="st-title" style="font-size:14px;"><i class="fa-solid fa-clock-rotate-left"></i> Test History</div>
+                    <div id="stHistoryList"><div style="text-align:center;padding:16px;color:var(--text-muted);font-size:13px;"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading...</div></div>
+                </div>
+            </div>`;
+        loadStHistory();
+    }
+
+    async function loadStHistory() {
+        const list = document.getElementById('stHistoryList');
+        if (!list) return;
+        try {
+            const snap = await get(ref(db, `userTests/${userPhone}`));
+            let tests = [];
+            if (snap.exists()) {
+                snap.forEach(c => { const t = c.val(); if (t && t.status === 'completed' && t.completedAt) tests.push({ id: c.key, ...t }); });
+            }
+            tests.sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0));
+            if (tests.length === 0) {
+                list.innerHTML = '<div style="text-align:center;padding:14px;color:var(--text-muted);font-size:13px;">Abhi koi completed test nahi — pehla test do!</div>';
+                return;
+            }
+            list.innerHTML = tests.slice(0, 10).map(t => {
+                const sc = t.totalScore || 0;
+                const col = sc >= 70 ? '#22c55e' : (sc >= 40 ? '#f59e0b' : '#ef4444');
+                return `<div class="st-history-row" onclick="viewStHistory('${t.id}')">
+                    <span><i class="fa-regular fa-calendar" style="margin-right:6px;color:var(--text-muted);"></i>${new Date(t.completedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })} · ${new Date(t.completedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span>
+                    <b style="font-family:monospace;color:${col};">${sc}/100</b>
+                </div>`;
+            }).join('');
+        } catch(e) { list.innerHTML = '<div style="text-align:center;padding:14px;color:var(--text-muted);font-size:13px;">History load nahi hui.</div>'; }
+    }
+
+    window.startNewSelfTest = async function() {
+        stConf();
+        if (!stTestConfig.enabled) { showToast('Self-Test abhi admin ne disable kiya hai ❌', true); return; }
+        const allKeys = Object.keys(kbModules || {});
+        if (allKeys.length < (stTestConfig.minChunksRequired || 5)) {
+            showToast('Admin ne abhi kaafi training data nahi add kiya — Self-Test unavailable', true);
+            return;
+        }
+        const chunkCount = Math.min(stTestConfig.chunksPerTest || 15, allKeys.length);
+        const sampled = sampleKbChunks(chunkCount);
+        const chunksPayload = sampled.map(k => `CHUNK KEY: ${k}\nCHUNK TITLE: ${(kbModules[k].title || 'Untitled')}\nCHUNK CONTENT:\n${(kbModules[k].content || '').substring(0, 1500)}\n---`).join('\n\n');
+
+        const sysPrompt = `You are a professional affiliate-marketing sales coach. Tum ek affiliate marketer ke trainer ho jo leads ko convince karna seekh raha hai.`;
+        const userPrompt = `Neeche Knowledge Base ke kuch training chunks diye hain. In chunks ke basis par max ${stTestConfig.questionsPerTest || 10} realistic LEAD-OBJECTION questions banao jo ek real lead poochh sakta hai (jaise "Ye scheme scam toh nahi hai?", "Paisa nahi hai", "Soch ke batata hoon"...). Har question SIRF ek specific chunk se related ho (us chunk ka objection/point), aur Hinglish/Hindi mein natural lead-tone mein likha ho, jaise lead bol raha ho.
+
+RULES:
+- Har question ek naya, alag scenario ho — dobaara mat karo.
+- Zyada se zyada ${stTestConfig.questionsPerTest || 10} questions (kam ho sakte hain, par max yahi).
+- Sirf STRICT JSON return karo, koi extra text nahi:
+[{"question": "...", "sourceChunkKey": "chunk_key"}]
+
+KNOWLEDGE BASE CHUNKS:
+${chunksPayload}`;
+
+        loader.classList.add('active');
+        document.getElementById('loader').querySelector('p').textContent = 'Questions taiyaar ho rahe hain...';
+        let testId = null;
+        try {
+            const parsed = await callAIForJSONWithRetry(sysPrompt, userPrompt);
+            const qs = Array.isArray(parsed) ? parsed : (parsed.questions || []);
+            if (!qs.length) throw new Error("AI ne koi question nahi banaya.");
+            const questions = qs.slice(0, stTestConfig.questionsPerTest || 10).map((q, i) => {
+                const ck = q.sourceChunkKey && kbModules[q.sourceChunkKey] ? q.sourceChunkKey : (sampled[i % sampled.length] || sampled[0]);
+                const chunk = kbModules[ck] || {};
+                return {
+                    id: 'q' + (i + 1),
+                    questionText: String(q.question || '').trim(),
+                    sourceChunkKey: ck,
+                    sourceChunkTitle: chunk.title || 'Training Chunk',
+                    sourceChunkContentSnapshot: chunk.content || ''
+                };
+            }).filter(q => q.questionText);
+            if (!questions.length) throw new Error("AI ne sahi questions nahi banaye.");
+
+            testId = push(ref(db, 'userTests/' + userPhone)).key;
+            const testRec = { status: 'in_progress', startedAt: Date.now(), sampledChunkKeys: sampled, questions, answers: [] };
+            await set(ref(db, `userTests/${userPhone}/${testId}`), testRec);
+            await update(ref(db, `phoneUsers/${userPhone}`), { activeTestId: testId });
+
+            stCurrent = { testId, questions, answers: [], qIndex: 0, totalQ: questions.length };
+            renderStQuestion();
+        } catch (e) {
+            if (testId) {
+                try { await remove(ref(db, `userTests/${userPhone}/${testId}`)); } catch(_){}
+                try { await update(ref(db, `phoneUsers/${userPhone}`), { activeTestId: null }); } catch(_){}
+            }
+            showToast('Questions generate nahi ho paye: ' + e.message, true);
+            await renderStHome();
+        } finally {
+            loader.classList.remove('active');
+            document.getElementById('loader').querySelector('p').textContent = 'Securing connection...';
+        }
+    };
+
+    window.resumeSelfTest = async function(testId) {
+        try {
+            const tSnap = await get(ref(db, `userTests/${userPhone}/${testId}`));
+            if (!tSnap.exists()) { showToast('Test record nahi mila ❌', true); renderStHome(); return; }
+            const rec = tSnap.val();
+            const questions = Array.isArray(rec.questions) ? rec.questions : [];
+            const answers = Array.isArray(rec.answers) ? rec.answers : [];
+            stCurrent = { testId, questions, answers, qIndex: Math.min(answers.length, questions.length), totalQ: questions.length };
+            if (stCurrent.qIndex >= questions.length) {
+                await evaluateSelfTest();
+            } else {
+                renderStQuestion();
+            }
+        } catch(e) { showToast('Resume fail: ' + e.message, true); }
+    };
+
+    window.discardSelfTest = async function(testId) {
+        if (!confirm('Is test ko discard karke naya test shuru karein?')) return;
+        try {
+            await update(ref(db, `userTests/${userPhone}/${testId}`), { status: 'abandoned' });
+            await update(ref(db, `phoneUsers/${userPhone}`), { activeTestId: null });
+        } catch(e) { console.error(e); }
+        await startNewSelfTest();
+    };
+
+    function renderStQuestion() {
+        if (!stCurrent) return;
+        const view = document.getElementById('stQuestionView');
+        document.getElementById('stHome').style.display = 'none';
+        document.getElementById('stResultView').style.display = 'none';
+        view.style.display = 'block';
+        document.getElementById('selfTestTitle').textContent = '🎯 Self-Test — Question ' + (stCurrent.qIndex + 1) + '/' + stCurrent.totalQ;
+
+        const idx = stCurrent.qIndex;
+        const q = stCurrent.questions[idx];
+        const isLast = idx === stCurrent.totalQ - 1;
+        const pct = Math.round(((idx) / stCurrent.totalQ) * 100);
+        const prevAnswer = (stCurrent.answers[idx] && stCurrent.answers[idx].answerText) || '';
+
+        view.innerHTML = `
+            <div class="st-progress-label">
+                <span>Question ${idx + 1} / ${stCurrent.totalQ}</span>
+                <span style="color:var(--text-muted);font-weight:500;">${stCurrent.answers.length}/${stCurrent.totalQ} answered</span>
+            </div>
+            <div class="st-progress-bar"><div class="st-progress-fill" style="width:${pct}%;"></div></div>
+            <div class="st-question-card">
+                <div class="st-qtext">${escHtml(q.questionText)}</div>
+                <div class="st-chunk-ref"><i class="fa-solid fa-book-open"></i> Source: ${escHtml(q.sourceChunkTitle || 'Training Chunk')}</div>
+                <textarea id="stAnswerInput" class="st-answer" placeholder="Apna jawab yahan likho — jaise real mein lead ko WhatsApp pe likhte ho...">${escHtml(prevAnswer)}</textarea>
+            </div>
+            <button class="st-primary-btn" id="stNextBtn" onclick="stSubmitAnswer()"><i class="fa-solid ${isLast ? 'fa-paper-plane' : 'fa-arrow-right'}"></i> ${isLast ? 'Submit Test' : 'Next'}</button>`;
+        view.scrollTop = 0;
+        const ta = document.getElementById('stAnswerInput');
+        if (ta) setTimeout(() => ta.focus(), 150);
+    }
+
+    window.stSubmitAnswer = async function() {
+        const ta = document.getElementById('stAnswerInput');
+        const answerText = ta ? ta.value.trim() : '';
+        if (!answerText) { showToast('Pehle apna answer likho ✍️', true); return; }
+        const idx = stCurrent.qIndex;
+        const btn = document.getElementById('stNextBtn');
+        if (btn) btn.disabled = true;
+
+        stCurrent.answers[idx] = { questionId: stCurrent.questions[idx].id, answerText };
+        try {
+            await set(ref(db, `userTests/${userPhone}/${stCurrent.testId}/answers`), stCurrent.answers);
+        } catch(e) {
+            showToast('Answer save nahi hua: ' + e.message, true);
+            if (btn) btn.disabled = false;
+            return;
+        }
+
+        if (idx >= stCurrent.totalQ - 1) {
+            await evaluateSelfTest();
+        } else {
+            stCurrent.qIndex++;
+            renderStQuestion();
+        }
+    };
+
+    async function evaluateSelfTest() {
+        if (!stCurrent || !stCurrent.answers.length) { showToast('Pehle saare answers do', true); renderStHome(); return; }
+        loader.classList.add('active');
+        document.getElementById('loader').querySelector('p').textContent = 'Tumhara result calculate ho raha hai...';
+        try {
+            const qaPairs = stCurrent.questions.map((q, i) => {
+                const a = stCurrent.answers[i] || {};
+                return `QUESTION ${i + 1} (id: ${q.id})\nSource Chunk Title: ${q.sourceChunkTitle}\nSource Chunk Content:\n${(q.sourceChunkContentSnapshot || '').substring(0, 1200)}\n---\nUser ka Answer: ${(a.answerText || '(koi answer nahi)')}\n\n`;
+            }).join('=====\n');
+
+            const sysPrompt = `You are a strict but encouraging sales-coach examiner. Ek affiliate marketer ne lead-objection questions ka mock exam diya hai. Tumhe har answer ko uske source chunk ke content se SEMANTICALLY compare karna hai (exact wording nahi — matlab/core-points check karo).`;
+            const userPrompt = `Neeche questions, har ek ka source chunk content, aur user ke answers hain. Har answer ko score do OUT OF 10, verdict do (correct/partial/incorrect), aur 1 short feedback line do (kya miss hua ya kya achha tha). Phir overall performance ka 2-3 line Hinglish summary do, aur un weak topics ki list do (chunk titles jahan score consistently kam raha).
+
+Strictly return ONLY this JSON (no extra text):
+{"answers":[{"questionId":"q1","score":8,"maxScore":10,"verdict":"partial","feedback":"..."}],"overallFeedback":"...","weakTopics":["..."]}
+
+DETAILS:
+${qaPairs}`;
+
+            const evalRes = await callAIForJSONWithRetry(sysPrompt, userPrompt);
+            const evals = Array.isArray(evalRes.answers) ? evalRes.answers : [];
+
+            const mergedAnswers = stCurrent.answers.map((a, i) => {
+                const ev = evals.find(e => String(e.questionId) === a.questionId) || {};
+                return {
+                    questionId: a.questionId,
+                    answerText: a.answerText,
+                    score: Number(ev.score) || 0,
+                    maxScore: Number(ev.maxScore) || 10,
+                    verdict: ev.verdict || 'incorrect',
+                    feedback: ev.feedback || ''
+                };
+            });
+
+            const sumScores = mergedAnswers.reduce((s, a) => s + a.score, 0);
+            const sumMax = mergedAnswers.reduce((s, a) => s + a.maxScore, 0);
+            const totalScore = sumMax > 0 ? Math.round((sumScores / sumMax) * 100) : 0;
+
+            const finalRec = {
+                status: 'completed',
+                completedAt: Date.now(),
+                answers: mergedAnswers,
+                totalScore,
+                maxScore: 100,
+                overallFeedback: evalRes.overallFeedback || '',
+                weakTopics: Array.isArray(evalRes.weakTopics) ? evalRes.weakTopics : []
+            };
+            await update(ref(db, `userTests/${userPhone}/${stCurrent.testId}`), finalRec);
+            await update(ref(db, `phoneUsers/${userPhone}`), { activeTestId: null });
+
+            renderStResult(finalRec);
+            stCurrent = null;
+        } catch (e) {
+            showToast('Result calculate nahi ho paya: ' + e.message + ' — Resume karke dobara try karo', true);
+            await renderStHome();
+        } finally {
+            loader.classList.remove('active');
+            document.getElementById('loader').querySelector('p').textContent = 'Securing connection...';
+        }
+    }
+
+    function renderStResult(rec) {
+        const view = document.getElementById('stResultView');
+        document.getElementById('stHome').style.display = 'none';
+        document.getElementById('stQuestionView').style.display = 'none';
+        view.style.display = 'block';
+        document.getElementById('selfTestTitle').textContent = '🎯 Test Result';
+
+        const score = rec.totalScore || 0;
+        const color = score >= 70 ? '#22c55e' : (score >= 40 ? '#f59e0b' : '#ef4444');
+        const verdictTxt = score >= 70 ? '🔥 Solid! Tum ready ho' : (score >= 40 ? '💪 Improvement chahiye' : '📚 Zyada practice karo');
+
+        const breakdown = (Array.isArray(rec.answers) ? rec.answers : []).map((a, i) => {
+            const q = (stCurrent && stCurrent.questions && stCurrent.questions[i]) || { questionText: 'Question ' + (i + 1) };
+            const qText = q.questionText || '';
+            return `<div class="st-breakdown-item" onclick="this.classList.toggle('open')">
+                <div class="st-breakdown-head">
+                    <span>${i + 1}. ${escHtml(qText.substring(0, 60))}${qText.length > 60 ? '...' : ''}</span>
+                    <span style="display:flex;align-items:center;gap:8px;"><span class="st-verdict ${a.verdict || 'incorrect'}">${a.verdict || '—'}</span><b style="font-family:monospace;">${a.score}/${a.maxScore || 10}</b></span>
+                </div>
+                <div class="st-breakdown-body">
+                    <div style="margin-bottom:6px;"><b style="color:var(--text-primary);">Tumhara answer:</b><br>${escHtml(a.answerText || '—')}</div>
+                    <div><b style="color:var(--text-primary);">Feedback:</b> ${escHtml(a.feedback || '—')}</div>
+                </div>
+            </div>`;
+        }).join('');
+
+        const weakChips = (Array.isArray(rec.weakTopics) && rec.weakTopics.length)
+            ? rec.weakTopics.map(w => `<span class="st-chip weak">📌 ${escHtml(w)}</span>`).join('')
+            : '<span class="st-chip ok">✅ Koi weak topic nahi</span>';
+
+        view.innerHTML = `
+            <div style="text-align:center;padding:10px 0 4px;">
+                <div class="st-score-big" style="color:${color};">${score}<span style="font-size:22px;color:var(--text-muted);">/100</span></div>
+                <div class="st-score-sub" style="color:${color};">${verdictTxt}</div>
+            </div>
+            <div class="st-card">
+                <div class="st-title" style="font-size:14px;"><i class="fa-solid fa-comment-dots" style="color:#10a37f;"></i> Overall Feedback</div>
+                <div class="st-sub" style="margin-bottom:0;">${escHtml(rec.overallFeedback || 'Koi feedback nahi.')}</div>
+            </div>
+            <div class="st-card">
+                <div class="st-title" style="font-size:14px;"><i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b;"></i> Weak Topics</div>
+                <div style="display:flex;flex-wrap:wrap;">${weakChips}</div>
+            </div>
+            <div class="st-card" style="padding-bottom:4px;">
+                <div class="st-title" style="font-size:14px;"><i class="fa-solid fa-list-check" style="color:#818cf8;"></i> Per-Question Breakdown</div>
+                <div style="margin-top:10px;">${breakdown || '<div class="st-note">Koi breakdown data nahi.</div>'}</div>
+            </div>
+            <button class="st-primary-btn" style="margin-bottom:10px;" onclick="startNewSelfTest()"><i class="fa-solid fa-plus-circle"></i> Naya Test Do</button>
+            <button class="st-ghost-btn" onclick="renderStHome()"><i class="fa-solid fa-clock-rotate-left"></i> History Dekho</button>`;
+        view.scrollTop = 0;
+    }
+
+    window.viewStHistory = async function(testId) {
+        try {
+            const tSnap = await get(ref(db, `userTests/${userPhone}/${testId}`));
+            if (!tSnap.exists()) { showToast('Test nahi mila', true); return; }
+            const rec = tSnap.val();
+            stCurrent = { testId, questions: Array.isArray(rec.questions) ? rec.questions : [], answers: [], qIndex: 0, totalQ: (Array.isArray(rec.questions) ? rec.questions.length : 0) };
+            renderStResult({ totalScore: rec.totalScore, maxScore: 100, overallFeedback: rec.overallFeedback, weakTopics: rec.weakTopics, answers: rec.answers });
+        } catch(e) { showToast('Load fail: ' + e.message, true); }
+    };
+</script>
+
+<!-- UI LOGIC -->
+<script>
+    window.closeMobileSidebar = function() {
+        document.getElementById('appSidebar').classList.remove('open');
+        document.getElementById('sidebarBackdrop').classList.remove('active');
+    }
+
+    window.toggleMobileSidebar = function() {
+        const sidebar = document.getElementById('appSidebar');
+        const backdrop = document.getElementById('sidebarBackdrop');
+        sidebar.classList.toggle('open');
+        backdrop.classList.toggle('active');
+    }
+
+    window.openSettingsPage = function() {
+        const overlay = document.getElementById('settingsOverlay');
+        overlay.classList.add('active');
+        const rulesInput = document.getElementById('personalRulesInput');
+        document.getElementById('charCount').innerText = rulesInput.value.length + '/2000';
+        backToSetMenu();
+        closeMobileSidebar();
+    }
+
+    window.closeSettingsPage = function() {
+        document.getElementById('settingsOverlay').classList.remove('active');
+    }
+
+    window.openSubPage = function(subId, title) {
+        document.getElementById('setMenu').style.display = 'none';
+        document.querySelectorAll('.settings-subpage').forEach(el => el.classList.remove('active'));
+        document.getElementById(subId).classList.add('active');
+        document.getElementById('settingsTitle').innerText = title;
+        document.getElementById('setBackBtn').style.display = 'block';
+    }
+
+    window.backToSetMenu = function() {
+        document.querySelectorAll('.settings-subpage').forEach(el => el.classList.remove('active'));
+        document.getElementById('setMenu').style.display = 'block';
+        document.getElementById('settingsTitle').innerText = 'Settings';
+        document.getElementById('setBackBtn').style.display = 'none';
+    }
+
+    document.addEventListener('click', function(e) {
+        const overlay = document.getElementById('settingsOverlay');
+        if (!overlay || !overlay.classList.contains('active')) return;
+        if (e.target === overlay) closeSettingsPage();
+    });
+
+    document.addEventListener('click', function(e) {
+        const overlay = document.getElementById('settingsOverlay');
+        if (!overlay || !overlay.classList.contains('active')) return;
+        const settingsHeader = overlay.querySelector('.settings-header');
+        const settingsBody = overlay.querySelector('.settings-body');
+        const insideSettings = (settingsHeader && settingsHeader.contains(e.target)) || (settingsBody && settingsBody.contains(e.target));
+        if (!insideSettings) closeSettingsPage();
+    }, true);
+</script>
+
+<!-- TOWER NOVA WAKE WORD ENGINE v3
+     FIX 1: en-IN language for wake word (English words detect honge)
+     FIX 2: continuous:true background = mic ek baar khulega, koi on/off sound nahi
+-->
+<script>
+(function(){
+    const WAKE_WORDS = [
+        'hey nova','hello nova','hey tower nova','hello tower nova',
+        'tower nova','towernova','hey towernova','hello towernova',
+        'nova','hey tower'
+    ];
+
+    let state = 'off';   // off | bg | awake | processing
+    let bgRec = null;
+    let activeRec = null;
+    let activeTimer = null;
+
+    /* --- Beep sound --- */
+    function playBeep(){
+        try{
+            const A = new(window.AudioContext||window.webkitAudioContext)();
+            [[660,0,0.12],[880,0.14,0.12],[1200,0.28,0.2]].forEach(([f,t,d])=>{
+                const o=A.createOscillator(),g=A.createGain();
+                o.connect(g);g.connect(A.destination);
+                o.type='sine';o.frequency.value=f;
+                g.gain.setValueAtTime(0,A.currentTime+t);
+                g.gain.linearRampToValueAtTime(0.28,A.currentTime+t+0.02);
+                g.gain.exponentialRampToValueAtTime(0.001,A.currentTime+t+d);
+                o.start(A.currentTime+t);o.stop(A.currentTime+t+d+0.05);
+            });
+        }catch(e){}
+    }
+
+    /* --- UI --- */
+    function setUI(s){
+        state = s;
+        const btn=document.getElementById('novaToggleBtn');
+        const lbl=document.getElementById('novaLabel');
+        const ov=document.getElementById('novaAwakeOverlay');
+        const mic=document.getElementById('micBtn');
+        if(!btn) return;
+        btn.classList.remove('active','awake');
+        if(ov) ov.classList.remove('show');
+        if(mic){mic.classList.remove('recording');mic.style.color='';}
+        if(s==='bg'){
+            btn.classList.add('active');
+            if(lbl) lbl.textContent='Nova ON';
+        } else if(s==='awake'){
+            btn.classList.add('awake');
+            if(lbl) lbl.textContent='⚡ Bolo!';
+            if(ov) ov.classList.add('show');
+            if(mic){mic.classList.add('recording');mic.style.cssText+='color:#10a37f!important';}
+        } else if(s==='processing'){
+            btn.classList.add('active');
+            if(lbl) lbl.textContent='⏳...';
+        } else {
+            if(lbl) lbl.textContent='Nova';
+        }
+    }
+
+    /* --- Background listening (continuous:true = NO mic click sound) --- */
+    function startBg(){
+        if(state!=='bg') return;
+        const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+        if(!SR){setUI('off');return;}
+
+        bgRec=new SR();
+        bgRec.continuous=true;        // ✅ MIC EK BAAR KHULEGA — koi sound nahi bar bar
+        bgRec.interimResults=true;    // interim results se wake word jaldi detect hoga
+        bgRec.lang='en-IN';           // ✅ en-IN: "Hey Nova" English words sahi detect honge
+        bgRec.maxAlternatives=3;
+
+        bgRec.onresult=(ev)=>{
+            if(state!=='bg') return;
+            for(let i=ev.resultIndex;i<ev.results.length;i++){
+                for(let j=0;j<ev.results[i].length;j++){
+                    const t=ev.results[i][j].transcript.toLowerCase().trim();
+                    if(WAKE_WORDS.some(w=>t.includes(w))){
+                        onWake(); return;
+                    }
+                }
+            }
+        };
+
+        bgRec.onerror=(ev)=>{
+            if(ev.error==='not-allowed'){setUI('off');return;}
+            // Network/audio error — restart bg after delay (still no sound, single restart)
+            if(state==='bg') setTimeout(startBg,1500);
+        };
+
+        bgRec.onend=()=>{
+            // continuous:true normally doesn't end, but if it does — restart silently
+            if(state==='bg') setTimeout(startBg,500);
+        };
+
+        try{bgRec.start();}
+        catch(e){if(state==='bg')setTimeout(startBg,1500);}
+    }
+
+    function stopBg(){
+        if(bgRec){try{bgRec.abort();}catch(e){}bgRec=null;}
+    }
+
+    /* --- Wake word detected --- */
+    function onWake(){
+        if(state==='awake'||state==='processing') return;
+        stopBg();
+        setUI('awake');
+        playBeep();
+
+        const inp=document.getElementById('aiInput');
+        if(inp) inp.placeholder='🎤 Bolo... sun raha hoon!';
+
+        const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+        activeRec=new SR();
+        activeRec.continuous=false;
+        activeRec.interimResults=false;
+        activeRec.lang='hi-IN';   // command Hindi mein le sakte hain
+        activeRec.maxAlternatives=1;
+
+        let got=false;
+
+        activeRec.onresult=(ev)=>{
+            got=true;
+            clearTimeout(activeTimer);
+            const transcript=ev.results[0][0].transcript.trim();
+            hideOverlay();
+            if(inp&&transcript){
+                inp.value=transcript;
+                setUI('processing');
+                setTimeout(()=>{ if(window.sendMsg) window.sendMsg(); },200);
+                // restartAfterTTS will be called when audio ends
+                // safety fallback after 35s
+                activeTimer=setTimeout(()=>{if(state==='processing')restartBg();},35000);
+            } else {
+                restartBg();
+            }
+        };
+
+        activeRec.onerror=()=>{hideOverlay();restartBg();};
+        activeRec.onend=()=>{if(!got){hideOverlay();restartBg();}};
+
+        // 9 second timeout agar user kuch nahi bola
+        activeTimer=setTimeout(()=>{
+            if(state==='awake'){
+                if(activeRec){try{activeRec.abort();}catch(e){}activeRec=null;}
+                hideOverlay(); restartBg();
+            }
+        },9000);
+
+        // Small delay before starting active mic (lets previous mic fully release)
+        setTimeout(()=>{
+            try{activeRec.start();}catch(e){hideOverlay();restartBg();}
+        },450);
+    }
+
+    function hideOverlay(){
+        const ov=document.getElementById('novaAwakeOverlay');
+        if(ov) ov.classList.remove('show');
+        const inp=document.getElementById('aiInput');
+        if(inp) inp.placeholder='Bolo ya type karo lead ne kya kaha...';
+        const mic=document.getElementById('micBtn');
+        if(mic){mic.classList.remove('recording');mic.style.color='';}
+    }
+
+    function restartBg(){
+        clearTimeout(activeTimer);
+        if(activeRec){try{activeRec.abort();}catch(e){}activeRec=null;}
+        setUI('bg');
+        setTimeout(startBg,600);
+    }
+
+    /* --- Public --- */
+    window.novaEngine={
+        toggle(){
+            if(state==='off'){ setUI('bg'); setTimeout(startBg,200); }
+            else { stopBg(); hideOverlay(); clearTimeout(activeTimer); setUI('off'); }
+        },
+        cancelActive(){
+            clearTimeout(activeTimer);
+            if(activeRec){try{activeRec.abort();}catch(e){}activeRec=null;}
+            hideOverlay(); restartBg();
+        },
+        restartAfterTTS(){ if(state==='processing') restartBg(); }
+    };
+})();
+</script>
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
